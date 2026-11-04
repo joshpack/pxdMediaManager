@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="using:PaxMediaManager"
+        x:Class="PaxMediaManager.Views.ChoiceDialog"
+        Title="New torrent"
+        Width="480" SizeToContent="Height"
+        CanResize="False" Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True">
+
+  <StackPanel Margin="24" Spacing="18">
+    <StackPanel Orientation="Horizontal" Spacing="14">
+      <Border Width="44" Height="44" CornerRadius="11" BoxShadow="0 0 20 0 #6600C8FF, 0 0 34 3 #3319F58C">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#00C8FF" Offset="0" />
+            <GradientStop Color="#19F58C" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Viewbox Margin="10">
+          <Path x:Name="Spade" Fill="#04140C" Width="100" Height="100" Stretch="Uniform" />
+        </Viewbox>
+      </Border>
+      <StackPanel VerticalAlignment="Center" Spacing="2">
+        <TextBlock Text="New torrent detected" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock Text="Choose what to do with it" Classes="muted" />
+      </StackPanel>
+    </StackPanel>
+
+    <Border Classes="card" Padding="14" Background="#0E1015">
+      <StackPanel Spacing="10">
+        <TextBlock x:Name="FileNameText" TextWrapping="Wrap" FontWeight="SemiBold" />
+        <Grid ColumnDefinitions="48,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+          <TextBlock Text="FROM" Classes="label" VerticalAlignment="Center" />
+          <TextBlock x:Name="FromText" Grid.Column="1" Classes="muted" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="TO" Classes="label" Grid.Row="1" VerticalAlignment="Center" />
+          <TextBlock x:Name="ToText" Grid.Row="1" Grid.Column="1" Classes="muted" TextTrimming="CharacterEllipsis" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <StackPanel x:Name="CategoryPanel" Spacing="6">
+      <TextBlock Text="WHEN IT FINISHES DOWNLOADING, MOVE IT TO" Classes="label" />
+      <ComboBox x:Name="CategoryBox" HorizontalAlignment="Stretch" MinHeight="38" />
+      <Grid x:Name="CategoryHint" ColumnDefinitions="*,Auto" IsVisible="False">
+        <TextBlock Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center"
+                   Text="No categories yet. Add some in Settings to file finished downloads automatically." />
+        <Button x:Name="OpenSettingsButton" Grid.Column="1" Classes="ghost" Content="Open Settings" />
+      </Grid>
+    </StackPanel>
+
+    <StackPanel Spacing="8">
+      <Button x:Name="TransferDeleteButton" Classes="primary" HorizontalAlignment="Stretch"
+              Content="Transfer and delete local copy" />
+      <Button x:Name="TransferButton" HorizontalAlignment="Stretch" Content="Transfer, keep local copy" />
+      <Grid ColumnDefinitions="*,8,*">
+        <Button x:Name="IgnoreOnceButton" Classes="ghost" HorizontalAlignment="Stretch" Content="Ignore this time" />
+        <Button x:Name="IgnoreForeverButton" Classes="ghost" Grid.Column="2" HorizontalAlignment="Stretch"
+                Content="Ignore forever" />
+      </Grid>
+    </StackPanel>
+  </StackPanel>
+</Window>

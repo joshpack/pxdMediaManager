@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PaxMediaManager.Views.MatchDialog"
+        Title="Fix match"
+        Width="680" Height="660" MinWidth="540" MinHeight="480"
+        WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="24" RowSpacing="14">
+
+    <StackPanel Spacing="2">
+      <TextBlock Text="Fix match" FontSize="18" FontWeight="Bold" Classes="neon" />
+      <TextBlock x:Name="ForText" Classes="muted" TextTrimming="CharacterEllipsis" />
+    </StackPanel>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,86,Auto,Auto,Auto" ColumnSpacing="8">
+      <TextBox x:Name="QueryBox" PlaceholderText="Title to search for" MinHeight="38" />
+      <TextBox x:Name="YearBox" Grid.Column="1" PlaceholderText="Year" MinHeight="38" />
+      <ToggleButton x:Name="MovieChip" Grid.Column="2" Classes="chip" Content="Movie" />
+      <ToggleButton x:Name="TvChip" Grid.Column="3" Classes="chip" Content="TV" />
+      <Button x:Name="SearchButton" Grid.Column="4" Classes="primary" Content="Search" MinWidth="86" />
+    </Grid>
+
+    <Border Grid.Row="2" Classes="card" Padding="0" Background="#0E1015">
+      <Panel>
+        <TextBlock x:Name="StatusText" Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   TextAlignment="Center" TextWrapping="Wrap" MaxWidth="360" />
+        <ListBox x:Name="ResultsList" Background="Transparent" Padding="6" />
+      </Panel>
+    </Border>
+
+    <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+      <Button x:Name="ResetButton" Classes="ghost" Content="Reset to automatic"
+              ToolTip.Tip="Forget the manual choice and let the app match it again" />
+      <Button x:Name="CancelButton" Grid.Column="2" Content="Cancel" MinWidth="90" />
+      <Button x:Name="UseButton" Grid.Column="3" Classes="primary" Content="Use this match" IsEnabled="False" MinWidth="140" />
+    </Grid>
+  </Grid>
+</Window>

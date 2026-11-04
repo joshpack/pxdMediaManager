@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PaxMediaManager.Views.DetailsWindow"
+        Title="Details"
+        Width="1000" Height="740" MinWidth="740" MinHeight="540"
+        WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="*,Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <Panel>
+        <!-- Wide backdrop fading into the window colour -->
+        <Panel Height="260" VerticalAlignment="Top" ClipToBounds="True">
+          <Image x:Name="BackdropImage" Stretch="UniformToFill" Opacity="0.55" />
+          <Border>
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#000E1015" Offset="0" />
+                <GradientStop Color="#E60E1015" Offset="0.85" />
+                <GradientStop Color="#0E1015" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
+          </Border>
+        </Panel>
+
+        <Grid ColumnDefinitions="240,*" ColumnSpacing="30" Margin="32,70,32,28">
+          <StackPanel Spacing="14">
+            <Border CornerRadius="12" ClipToBounds="True" Height="360" Background="#1D212C"
+                    BoxShadow="0 8 36 0 #99000000, 0 0 30 0 #3319F58C">
+              <Panel>
+                <TextBlock x:Name="PosterInitials" FontSize="64" FontWeight="Bold" Foreground="#55FFFFFF"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Image x:Name="PosterImage" Stretch="UniformToFill" />
+              </Panel>
+            </Border>
+            <WrapPanel x:Name="RatingsPanel" Orientation="Horizontal" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Spacing="12">
+            <TextBlock x:Name="TitleText" FontSize="30" FontWeight="Bold" TextWrapping="Wrap" Classes="neon" />
+            <TextBlock x:Name="MetaText" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock x:Name="TaglineText" FontStyle="Italic" Foreground="#B3FFD9" TextWrapping="Wrap" IsVisible="False" />
+
+            <!-- Continue watching / next episode -->
+            <Border x:Name="NextUpCard" Classes="card" Padding="14,10" IsVisible="False" BorderBrush="#1D5A47">
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel VerticalAlignment="Center" Spacing="4">
+                  <TextBlock x:Name="NextUpText" FontWeight="SemiBold" TextWrapping="Wrap" />
+                  <Border x:Name="NextUpTrack" Height="4" Background="#33FFFFFF" CornerRadius="2" ClipToBounds="True" IsVisible="False">
+                    <Border x:Name="NextUpFill" Background="#19F58C" HorizontalAlignment="Left" Width="0" />
+                  </Border>
+                </StackPanel>
+                <Button x:Name="NextUpButton" Grid.Column="1" Classes="primary" Content="▶  Play" VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+
+            <TextBlock x:Name="OverviewText" TextWrapping="Wrap" LineHeight="21" />
+
+            <Border Classes="card" x:Name="CrewCard" IsVisible="False">
+              <StackPanel Spacing="8">
+                <TextBlock x:Name="CrewHeader" Text="CAST &amp; CREW" Classes="label" />
+                <TextBlock x:Name="CrewText" TextWrapping="Wrap" />
+                <TextBlock x:Name="CastLabel" Text="Starring — click a name to see what else of theirs you have" Classes="muted" FontSize="11" IsVisible="False" />
+                <WrapPanel x:Name="CastPanel" ItemSpacing="6" LineSpacing="6" />
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card" x:Name="EpisodesCard" IsVisible="False">
+              <StackPanel Spacing="8">
+                <TextBlock x:Name="EpisodesHeader" Text="EPISODES" Classes="label" />
+                <TextBlock x:Name="EpisodesSummary" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+                <StackPanel x:Name="EpisodesList" Spacing="2" />
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel Spacing="8">
+                <TextBlock Text="MEDIA INFO" Classes="label" />
+                <TextBlock x:Name="SpecsText" TextWrapping="Wrap" LineHeight="20" Text="Reading file details…" />
+              </StackPanel>
+            </Border>
+
+            <TextBlock x:Name="PathText" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+          </StackPanel>
+        </Grid>
+      </Panel>
+    </ScrollViewer>
+
+    <Border Grid.Row="1" Background="#CC0B0F14" BorderBrush="#272C39" BorderThickness="0,1,0,0" Padding="20,12">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <WrapPanel ItemSpacing="8" LineSpacing="6">
+          <Button x:Name="PlayButton" Classes="primary" Content="▶  Play" IsVisible="False" MinWidth="100" />
+          <Button x:Name="PicturesButton" Content="Pictures" IsVisible="False" />
+          <Button x:Name="TrailerButton" Content="▶ Trailer" IsVisible="False" ToolTip.Tip="Watch the trailer on YouTube" />
+          <Button x:Name="SubtitlesButton" Content="Subtitles…" IsVisible="False" ToolTip.Tip="Find subtitles on OpenSubtitles" />
+          <Button x:Name="WatchedButton" Content="Mark watched" IsVisible="False" />
+          <Button x:Name="FolderButton" Content="Open folder" />
+          <Button x:Name="FixButton" Classes="ghost" Content="Fix match…" IsVisible="False" />
+        </WrapPanel>
+        <Button x:Name="CloseButton" Grid.Column="2" Content="Close" MinWidth="90" VerticalAlignment="Bottom" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

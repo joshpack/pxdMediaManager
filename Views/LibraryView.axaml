@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="PaxMediaManager.Views.LibraryView"
+             Focusable="True">
+
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,14,0,0">
+
+    <WrapPanel x:Name="Chips" />
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10" Margin="0,2,0,0">
+      <TextBox x:Name="SearchBox" MinHeight="34" VerticalAlignment="Center" Padding="12,6" PlaceholderText="Search library…" />
+      <ComboBox x:Name="SortBox" Grid.Column="1" Width="160" MinHeight="34" VerticalAlignment="Center" Padding="12,6" />
+      <Button x:Name="RescanButton" Grid.Column="2" Content="Rescan all" MinHeight="34" VerticalAlignment="Center" Padding="12,6"
+              ToolTip.Tip="Look every title up on TMDB again" />
+      <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+        <ToggleButton x:Name="GridButton" Classes="chip" Content="Grid" Padding="12,4" ToolTip.Tip="Tile grid" />
+        <ToggleButton x:Name="CarouselButton" Classes="chip" Content="Carousel" Padding="12,4" ToolTip.Tip="Carousel with details" />
+      </StackPanel>
+    </Grid>
+
+    <!-- Shelves and filters: everything here comes from the cached details, ratings, file specs and watch history -->
+    <WrapPanel Grid.Row="2" Margin="0,8,0,0" ItemSpacing="8" LineSpacing="6">
+      <ComboBox x:Name="ShelfBox" Width="180" MinHeight="32" Padding="10,4" ToolTip.Tip="Shelf" />
+      <ComboBox x:Name="GenreBox" Width="150" MinHeight="32" Padding="10,4" ToolTip.Tip="Genre" />
+      <ComboBox x:Name="DecadeBox" Width="136" MinHeight="32" Padding="10,4" ToolTip.Tip="Decade" />
+      <ComboBox x:Name="ResBox" Width="130" MinHeight="32" Padding="10,4" ToolTip.Tip="Video resolution" />
+      <ComboBox x:Name="RatingBox" Width="130" MinHeight="32" Padding="10,4" ToolTip.Tip="Minimum rating (IMDb when known, out of 10)" />
+      <Button x:Name="ClearFiltersButton" Classes="ghost" Content="Clear filters" MinHeight="32" Padding="10,4" IsVisible="False" />
+      <Button x:Name="SurpriseButton" Content="🎲 Surprise me" MinHeight="32" Padding="12,4"
+              ToolTip.Tip="Pick something unwatched and well rated from what's shown" />
+      <Button x:Name="StatsButton" Content="Stats" MinHeight="32" Padding="12,4" ToolTip.Tip="Library statistics" />
+      <Button x:Name="DupesButton" Content="Duplicates" MinHeight="32" Padding="12,4"
+              ToolTip.Tip="Find titles you have more than once, and lower-quality copies worth replacing" />
+    </WrapPanel>
+
+    <TextBlock x:Name="SummaryText" Grid.Row="3" Classes="muted" FontSize="11" Margin="2,10,0,8" TextWrapping="Wrap" />
+
+    <Panel Grid.Row="4">
+      <TextBlock x:Name="StatusText" Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center"
+                 TextAlignment="Center" TextWrapping="Wrap" MaxWidth="440" />
+
+      <!-- Grid layout -->
+      <ScrollViewer x:Name="Scroller">
+        <StackPanel Margin="0,0,14,0">
+          <WrapPanel x:Name="Tiles" />
+          <Button x:Name="MoreButton" Content="Show more" Classes="ghost" HorizontalAlignment="Center"
+                  Margin="0,10,0,16" IsVisible="False" />
+          <TextBlock x:Name="CreditText" Classes="muted" FontSize="10" TextWrapping="Wrap" HorizontalAlignment="Center"
+                     TextAlignment="Center" Margin="0,0,0,18" IsVisible="False"
+                     Text="This product uses the TMDB API but is not endorsed or certified by TMDB." />
+        </StackPanel>
+      </ScrollViewer>
+
+      <!-- Carousel layout -->
+      <Grid x:Name="CarouselHost" RowDefinitions="Auto,*" IsVisible="False">
+        <Panel x:Name="Stage" Height="300" ClipToBounds="True" Background="Transparent" Focusable="True">
+          <Panel x:Name="CarouselTiles" />
+          <Button x:Name="PrevButton" Classes="ghost" Content="‹" FontSize="30" Width="44" Height="84"
+                  HorizontalAlignment="Left" VerticalAlignment="Center" ZIndex="50" ToolTip.Tip="Previous (←)" />
+          <Button x:Name="NextButton" Classes="ghost" Content="›" FontSize="30" Width="44" Height="84"
+                  HorizontalAlignment="Right" VerticalAlignment="Center" ZIndex="50" ToolTip.Tip="Next (→)" />
+        </Panel>
+
+        <Border x:Name="DetailsCard" Grid.Row="1" Classes="card" Margin="0,6,14,10" Padding="18,14">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="4">
+              <TextBlock x:Name="DetTitle" FontSize="20" FontWeight="Bold" Classes="neon" TextTrimming="CharacterEllipsis" />
+              <TextBlock x:Name="DetMeta" Classes="muted" />
+              <TextBlock x:Name="DetOverview" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="64"
+                         FontSize="12.5" Foreground="#C9CFDB" Margin="0,4,0,0" />
+              <TextBlock x:Name="DetName" Classes="muted" FontSize="10.5" TextTrimming="CharacterEllipsis" Margin="0,4,0,0" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="6" Margin="18,0,0,0" VerticalAlignment="Center">
+              <TextBlock x:Name="DetCounter" Classes="muted" HorizontalAlignment="Right" />
+              <Button x:Name="DetPlayButton" Classes="primary" Content="Play" IsVisible="False" />
+              <Button x:Name="DetPicturesButton" Content="Pictures" IsVisible="False" />
+              <Button x:Name="DetOpenButton" Content="Open folder" />
+              <Button x:Name="DetFixButton" Content="Fix match…" />
+            </StackPanel>
+          </Grid>
+        </Border>
+      </Grid>
+    </Panel>
+  </Grid>
+</UserControl>

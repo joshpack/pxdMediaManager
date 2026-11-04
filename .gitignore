@@ -1,0 +1,32 @@
+# Build output
+bin/
+obj/
+publish/
+dist/
+artifacts/
+installer/Output/
+*.exe
+*.msi
+*.zip
+*.tar.gz
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+# Secrets and local data
+.env
+*.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+*.snk
+appsettings.*.local.json
+*.db
+*.sqlite
+*.log

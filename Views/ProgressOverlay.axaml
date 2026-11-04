@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PaxMediaManager.Views.ProgressOverlay"
+        Width="440" SizeToContent="Height"
+        CanResize="False" Topmost="True" ShowInTaskbar="False" ShowActivated="False"
+        WindowDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        Focusable="False">
+
+  <Window.Styles>
+    <Style Selector="ProgressBar">
+      <Setter Property="MinHeight" Value="6" />
+      <Setter Property="Height" Value="6" />
+      <Setter Property="Background" Value="#272C39" />
+      <Setter Property="CornerRadius" Value="3" />
+    </Style>
+    <Style Selector="ProgressBar /template/ Border#PART_Indicator">
+      <Setter Property="CornerRadius" Value="3" />
+      <Setter Property="Effect" Value="drop-shadow(0 0 9 #8019F58C)" />
+    </Style>
+  </Window.Styles>
+
+  <Border Margin="14" Padding="16,14" CornerRadius="14"
+          Background="#141922" BorderBrush="#1F6B55" BorderThickness="1"
+          BoxShadow="0 0 26 2 #4019F58C, 0 10 30 0 #99000000">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+      <Border Width="38" Height="38" CornerRadius="10" VerticalAlignment="Top" BoxShadow="0 0 18 0 #6600C8FF">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#00C8FF" Offset="0" />
+            <GradientStop Color="#19F58C" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Viewbox Margin="9">
+          <Path x:Name="Spade" Fill="#04140C" Width="100" Height="100" Stretch="Uniform" />
+        </Viewbox>
+      </Border>
+
+      <StackPanel Grid.Column="1" Spacing="8">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock x:Name="TitleText" Text="Moving download" FontWeight="SemiBold" FontSize="14"
+                     TextTrimming="CharacterEllipsis" />
+          <TextBlock x:Name="PercentText" Grid.Column="1" Text="0%" FontWeight="Bold" Foreground="#19F58C"
+                     Effect="drop-shadow(0 0 10 #8019F58C)" />
+        </Grid>
+        <ProgressBar x:Name="Bar" Minimum="0" Maximum="100" Value="0">
+          <ProgressBar.Foreground>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#00C8FF" Offset="0" />
+              <GradientStop Color="#19F58C" Offset="1" />
+            </LinearGradientBrush>
+          </ProgressBar.Foreground>
+        </ProgressBar>
+        <TextBlock x:Name="DetailText" Classes="muted" FontSize="12" Text="Starting…" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</Window>

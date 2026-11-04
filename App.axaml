@@ -1,0 +1,238 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="PaxMediaManager.App"
+             RequestedThemeVariant="Dark">
+
+  <Application.Resources>
+    <!-- Fluent derives checkboxes, selection and focus from these, so they follow the neon-green accent -->
+    <Color x:Key="SystemAccentColor">#19F58C</Color>
+    <Color x:Key="SystemAccentColorLight1">#4DFFA9</Color>
+    <Color x:Key="SystemAccentColorLight2">#80FFC1</Color>
+    <Color x:Key="SystemAccentColorLight3">#B3FFD9</Color>
+    <Color x:Key="SystemAccentColorDark1">#12D274</Color>
+    <Color x:Key="SystemAccentColorDark2">#0DA85D</Color>
+    <Color x:Key="SystemAccentColorDark3">#087A43</Color>
+    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#04140C" />
+    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#04140C" />
+    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#04140C" />
+    <Color x:Key="Bg">#0E1015</Color>
+    <Color x:Key="Surface">#161922</Color>
+    <Color x:Key="SurfaceRaised">#1D212C</Color>
+    <Color x:Key="Border">#272C39</Color>
+    <Color x:Key="Accent">#19F58C</Color>
+    <Color x:Key="AccentHover">#4DFFA9</Color>
+    <Color x:Key="AccentPressed">#12D274</Color>
+    <SolidColorBrush x:Key="BgBrush" Color="{StaticResource Bg}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="{StaticResource SurfaceRaised}" />
+    <SolidColorBrush x:Key="BorderBrush2" Color="{StaticResource Border}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource Accent}" />
+    <SolidColorBrush x:Key="TextBrush" Color="#E8EAF0" />
+    <SolidColorBrush x:Key="MutedBrush" Color="#8A92A6" />
+    <SolidColorBrush x:Key="GoodBrush" Color="#19F58C" />
+    <SolidColorBrush x:Key="WarnBrush" Color="#F5B14C" />
+    <SolidColorBrush x:Key="BadBrush" Color="#F2666A" />
+    <SolidColorBrush x:Key="InfoBrush" Color="#00C8FF" />
+    <LinearGradientBrush x:Key="WindowBgBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#0D1117" Offset="0" />
+      <GradientStop Color="#0B0F14" Offset="0.55" />
+      <GradientStop Color="#091315" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="NeonTextBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+      <GradientStop Color="#35D8FF" Offset="0" />
+      <GradientStop Color="#19F58C" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="TabItemHeaderSelectedPipeFill" Color="#19F58C" />
+    <SolidColorBrush x:Key="TabItemHeaderForegroundSelected" Color="#19F58C" />
+    <SolidColorBrush x:Key="TabItemHeaderForegroundSelectedPointerOver" Color="#4DFFA9" />
+    <SolidColorBrush x:Key="TabItemHeaderForegroundSelectedPressed" Color="#4DFFA9" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{StaticResource WindowBgBrush}" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <!-- Slow neon "breathing" for status lights -->
+    <Style Selector="Ellipse.pulse">
+      <Style.Animations>
+        <Animation Duration="0:0:2" IterationCount="Infinite" Easing="SineEaseInOut">
+          <KeyFrame Cue="0%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+          <KeyFrame Cue="50%"><Setter Property="Opacity" Value="0.35" /></KeyFrame>
+          <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+    </Style>
+    <Style Selector="TextBlock.label">
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="LetterSpacing" Value="0.8" />
+    </Style>
+
+    <Style Selector="TextBlock.big">
+      <Setter Property="FontSize" Value="34" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+      <Setter Property="Effect" Value="drop-shadow(0 0 14 #7019F58C)" />
+    </Style>
+    <Style Selector="TextBlock.big.blue">
+      <Setter Property="Foreground" Value="#00C8FF" />
+      <Setter Property="Effect" Value="drop-shadow(0 0 14 #7000C8FF)" />
+    </Style>
+    <Style Selector="TextBlock.neon">
+      <Setter Property="Foreground" Value="{StaticResource NeonTextBrush}" />
+      <Setter Property="Effect" Value="drop-shadow(0 0 12 #5519F58C)" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Padding" Value="4,6" />
+      <Setter Property="Margin" Value="0,0,18,0" />
+    </Style>
+    <Style Selector="TabItem:selected">
+      <Setter Property="Effect" Value="drop-shadow(0 0 10 #8019F58C)" />
+    </Style>
+
+    <!-- Cards light up with a faint neon edge when hovered -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="18" />
+      <Setter Property="BoxShadow" Value="0 0 0 0 #0019F58C" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.25" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Border.card:pointerover">
+      <Setter Property="BorderBrush" Value="#1D5A47" />
+      <Setter Property="BoxShadow" Value="0 0 26 0 #2219F58C" />
+    </Style>
+
+    <Style Selector="TextBox">
+      <Setter Property="Background" Value="{StaticResource BgBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="12,9" />
+      <Setter Property="MinHeight" Value="38" />
+    </Style>
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="#00C8FF" />
+      <Setter Property="BoxShadow" Value="0 0 16 0 #6600C8FF" />
+    </Style>
+
+    <!-- Buttons -->
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="16,9" />
+      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="{StaticResource SurfaceRaisedBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+    <Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="BoxShadow" Value="0 0 0 0 #0000C8FF" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#232A38" />
+      <Setter Property="BorderBrush" Value="#2B7C9A" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+      <Setter Property="BoxShadow" Value="0 0 16 0 #3300C8FF" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#04140C" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.primary /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="BoxShadow" Value="0 0 18 0 #5519F58C" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentHover}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#04140C" />
+      <Setter Property="BoxShadow" Value="0 0 30 3 #9919F58C" />
+    </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentPressed}" />
+      <Setter Property="BoxShadow" Value="0 0 12 0 #6619F58C" />
+    </Style>
+    <Style Selector="Button.ghost">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+    </Style>
+    <Style Selector="Button.ghost:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#141C22" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#19F58C" />
+      <Setter Property="BoxShadow" Value="0 0 14 0 #2219F58C" />
+    </Style>
+
+    <!-- Library: category chips and poster tiles -->
+    <Style Selector="ToggleButton.chip">
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="14,5" />
+      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+    </Style>
+    <Style Selector="ToggleButton.chip:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#232A38" />
+      <Setter Property="BorderBrush" Value="#2B7C9A" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+    <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#PART_ContentPresenter, ToggleButton.chip:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#04140C" />
+      <Setter Property="BoxShadow" Value="0 0 18 0 #5519F58C" />
+    </Style>
+
+    <Style Selector="Border.tile">
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BoxShadow" Value="0 0 0 0 #0019F58C" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Border.tile:pointerover">
+      <Setter Property="BorderBrush" Value="#1F7A5C" />
+      <Setter Property="Background" Value="#11161D" />
+      <Setter Property="BoxShadow" Value="0 0 24 2 #4419F58C, 0 0 42 0 #2200C8FF" />
+    </Style>
+
+    <Style Selector="ScrollViewer">
+      <Setter Property="AllowAutoHide" Value="True" />
+    </Style>
+  </Application.Styles>
+</Application>

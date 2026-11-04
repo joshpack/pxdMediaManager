@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- pax-media-manager-setup.exe: one file that installs PAX Media Manager for the current user (no admin, no .NET
+       needed). The app itself is a folder (its video player's native libraries have to be real files), so it travels
+       inside this program as payload.zip, made by ..\build-setup.ps1. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PaxMediaManager.Setup</RootNamespace>
+    <AssemblyName>pax-media-manager-setup</AssemblyName>
+    <Product>PAX Media Manager</Product>
+    <Company>PAX Digital</Company>
+    <Version>1.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon Condition="Exists('..\spade.ico')">..\spade.ico</ApplicationIcon>
+    <PayloadZip Condition="'$(PayloadZip)' == ''">payload.zip</PayloadZip>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+    <!-- off-screen drawing for the screenshot option (checking the design without opening a window) -->
+    <PackageReference Include="Avalonia.Headless" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Skia" Version="12.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(PayloadZip)" LogicalName="payload.zip" Condition="Exists('$(PayloadZip)')" />
+  </ItemGroup>
+
+</Project>

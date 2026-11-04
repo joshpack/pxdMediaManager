@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PaxMediaManager.Views.BatchDialog"
+        Title="Torrents found"
+        Width="700" SizeToContent="Height"
+        CanResize="False" Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True">
+
+  <StackPanel Margin="24" Spacing="16">
+    <StackPanel Orientation="Horizontal" Spacing="14">
+      <Border Width="44" Height="44" CornerRadius="11" BoxShadow="0 0 20 0 #6600C8FF, 0 0 34 3 #3319F58C">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#00C8FF" Offset="0" />
+            <GradientStop Color="#19F58C" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Viewbox Margin="10">
+          <Path x:Name="Spade" Fill="#04140C" Width="100" Height="100" Stretch="Uniform" />
+        </Viewbox>
+      </Border>
+      <StackPanel VerticalAlignment="Center" Spacing="2">
+        <TextBlock x:Name="TitleText" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock x:Name="SubtitleText" Classes="muted" />
+      </StackPanel>
+    </StackPanel>
+
+    <Border Classes="card" Padding="0" Background="#0E1015">
+      <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="16,10,12,8">
+          <TextBlock x:Name="CountText" Classes="label" VerticalAlignment="Center" />
+          <StackPanel x:Name="SetAllPanel" Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="0,0,14,0">
+            <TextBlock Text="SET ALL TO" Classes="label" VerticalAlignment="Center" />
+            <ComboBox x:Name="SetAllBox" Width="190" MinHeight="30" Padding="10,4" PlaceholderText="Choose…" />
+          </StackPanel>
+          <Button x:Name="SelectAllButton" Grid.Column="2" Classes="ghost" Content="Select all" MinHeight="28" Padding="10,3" />
+          <Button x:Name="SelectNoneButton" Grid.Column="3" Classes="ghost" Content="None" MinHeight="28" Padding="10,3" />
+        </Grid>
+        <ScrollViewer Grid.Row="1" MaxHeight="280">
+          <StackPanel x:Name="RowsPanel" Margin="8,0,8,8" />
+        </ScrollViewer>
+      </Grid>
+    </Border>
+
+    <Grid x:Name="CategoryHint" ColumnDefinitions="*,Auto" IsVisible="False">
+      <TextBlock Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center"
+                 Text="No categories yet. Add some in Settings to file finished downloads automatically." />
+      <Button x:Name="OpenSettingsButton" Grid.Column="1" Classes="ghost" Content="Open Settings" />
+    </Grid>
+
+    <StackPanel Spacing="8">
+      <Button x:Name="TransferDeleteButton" Classes="primary" HorizontalAlignment="Stretch"
+              Content="Transfer selected and delete local copies" />
+      <Button x:Name="TransferButton" HorizontalAlignment="Stretch" Content="Transfer selected, keep local copies" />
+      <Grid ColumnDefinitions="*,8,*">
+        <Button x:Name="IgnoreOnceButton" Classes="ghost" HorizontalAlignment="Stretch" Content="Leave them for now" />
+        <Button x:Name="IgnoreForeverButton" Classes="ghost" Grid.Column="2" HorizontalAlignment="Stretch"
+                Content="Ignore selected forever" />
+      </Grid>
+    </StackPanel>
+  </StackPanel>
+</Window>

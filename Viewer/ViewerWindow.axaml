@@ -1,0 +1,135 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctl="using:PaxMediaManager.Viewer"
+        x:Class="PaxMediaManager.Viewer.ViewerWindow"
+        Title="PAX Media Manager"
+        Width="1200" Height="760" MinWidth="700" MinHeight="440"
+        Background="#05070A"
+        WindowStartupLocation="CenterScreen">
+
+  <Window.Styles>
+    <Style Selector="Button.icon">
+      <Setter Property="Width" Value="40" />
+      <Setter Property="Height" Value="40" />
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="20" />
+    </Style>
+    <Style Selector="Button.icon PathIcon">
+      <Setter Property="Width" Value="18" />
+      <Setter Property="Height" Value="18" />
+    </Style>
+    <Style Selector="Button.big">
+      <Setter Property="Width" Value="48" />
+      <Setter Property="Height" Value="48" />
+      <Setter Property="CornerRadius" Value="24" />
+    </Style>
+    <Style Selector="Button.big PathIcon">
+      <Setter Property="Width" Value="22" />
+      <Setter Property="Height" Value="22" />
+    </Style>
+    <Style Selector="Border.sep">
+      <Setter Property="Width" Value="1" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="Margin" Value="8,0" />
+      <Setter Property="Background" Value="#2A3140" />
+    </Style>
+    <Style Selector="ToggleButton.iconToggle">
+      <Setter Property="Width" Value="40" />
+      <Setter Property="Height" Value="40" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="20" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+    </Style>
+    <Style Selector="ToggleButton.iconToggle:checked /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#143326" />
+      <Setter Property="Foreground" Value="#19F58C" />
+    </Style>
+    <Style Selector="ToggleButton.iconToggle PathIcon">
+      <Setter Property="Width" Value="18" />
+      <Setter Property="Height" Value="18" />
+    </Style>
+  </Window.Styles>
+
+  <Grid>
+    <!-- Where the picture or video is shown -->
+    <Panel x:Name="StagePanel" Background="#05070A">
+      <ctl:ImageStage x:Name="Stage" />
+      <Image x:Name="VideoImage" Stretch="Uniform" IsVisible="False" IsHitTestVisible="False" />
+      <TextBlock x:Name="CenterMessage" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+                 TextWrapping="Wrap" MaxWidth="520" FontSize="15" Foreground="#8A92A6" IsHitTestVisible="False"
+                 Text="Open a picture or video to begin&#10;Ctrl+O, or play something from your Library" />
+    </Panel>
+
+    <!-- Title and position, top -->
+    <Border x:Name="TopBar" VerticalAlignment="Top" Padding="22,16,22,40" IsHitTestVisible="False">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+          <GradientStop Color="#CC05070A" Offset="0" />
+          <GradientStop Color="#0005070A" Offset="1" />
+        </LinearGradientBrush>
+      </Border.Background>
+      <StackPanel Spacing="2">
+        <TextBlock x:Name="FileText" FontSize="16" FontWeight="SemiBold" Classes="neon" TextTrimming="CharacterEllipsis" />
+        <TextBlock x:Name="InfoText" Classes="muted" FontSize="12" />
+      </StackPanel>
+    </Border>
+
+    <!-- Open button, top right (kept separate so the title area ignores the mouse) -->
+    <Button x:Name="OpenButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,18,0" Content="Open…" />
+
+    <!-- Controls, bottom -->
+    <Border x:Name="Controls" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="24,0,24,24" Padding="16,10"
+            CornerRadius="18" Background="#EB121720" BorderBrush="#1F6B55" BorderThickness="1"
+            BoxShadow="0 0 28 0 #3319F58C, 0 10 30 0 #99000000">
+      <StackPanel Spacing="8">
+
+        <!-- Video: seek bar -->
+        <Grid x:Name="SeekRow" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinWidth="560">
+          <TextBlock x:Name="TimeText" Text="0:00" VerticalAlignment="Center" FontSize="12" MinWidth="44" />
+          <Slider x:Name="SeekSlider" Grid.Column="1" Minimum="0" Maximum="1000" Value="0" />
+          <TextBlock x:Name="DurationText" Grid.Column="2" Text="0:00" VerticalAlignment="Center" FontSize="12" MinWidth="44"
+                     TextAlignment="Right" Foreground="#8A92A6" />
+        </Grid>
+
+        <!-- Pictures -->
+        <StackPanel x:Name="ImageBar" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+          <Button x:Name="ImgPrevButton" Classes="icon" ToolTip.Tip="Previous (←)"><PathIcon Data="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></Button>
+          <Button x:Name="SlideshowButton" Classes="icon big primary" ToolTip.Tip="Start slideshow (Space)"><PathIcon x:Name="SlideshowIcon" Data="M8 5v14l11-7z" /></Button>
+          <Button x:Name="ImgNextButton" Classes="icon" ToolTip.Tip="Next (→)"><PathIcon Data="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></Button>
+          <Border Classes="sep" />
+          <Button x:Name="ZoomOutButton" Classes="icon" ToolTip.Tip="Zoom out (−)"><PathIcon Data="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9v1h5V9H7z" /></Button>
+          <Button x:Name="ZoomLabelButton" Content="100%" MinWidth="64" Classes="ghost" ToolTip.Tip="Actual size (1)" />
+          <Button x:Name="ZoomInButton" Classes="icon" ToolTip.Tip="Zoom in (+)"><PathIcon Data="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm2.5-4h-2v2H9v-2H7V9h2V7h1v2h2v1z" /></Button>
+          <Button x:Name="FitButton" Content="Fit" Classes="ghost" ToolTip.Tip="Fit to window (0)" />
+          <Button x:Name="RotateButton" Classes="icon" ToolTip.Tip="Rotate (R)"><PathIcon Data="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10l4.55-4.45zM19.93 11c-.17-1.39-.72-2.73-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47h2.02zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z" /></Button>
+          <Border Classes="sep" />
+          <TextBlock Text="SLIDE EVERY" Classes="label" VerticalAlignment="Center" Margin="0,0,6,0" />
+          <ComboBox x:Name="SpeedBox" Width="92" MinHeight="34" Padding="10,4" VerticalAlignment="Center" ToolTip.Tip="How long each picture stays up during a slideshow" />
+          <ToggleButton x:Name="LoopToggle" Classes="iconToggle" ToolTip.Tip="Loop"><PathIcon Data="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" /></ToggleButton>
+          <ToggleButton x:Name="ShuffleToggle" Classes="iconToggle" ToolTip.Tip="Shuffle"><PathIcon Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" /></ToggleButton>
+          <Border Classes="sep" />
+          <Button x:Name="ImgFullscreenButton" Classes="icon" ToolTip.Tip="Fullscreen (F)"><PathIcon Data="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" /></Button>
+        </StackPanel>
+
+        <!-- Video -->
+        <StackPanel x:Name="VideoBar" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+          <Button x:Name="VidPrevButton" Classes="icon" ToolTip.Tip="Previous video (P)"><PathIcon Data="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></Button>
+          <Button x:Name="PlayPauseButton" Classes="icon big primary" ToolTip.Tip="Play / pause (Space)"><PathIcon x:Name="PlayPauseIcon" Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></Button>
+          <Button x:Name="VidNextButton" Classes="icon" ToolTip.Tip="Next video (N)"><PathIcon Data="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" /></Button>
+          <Border Classes="sep" />
+          <Button x:Name="MuteButton" Classes="icon" ToolTip.Tip="Mute (M)"><PathIcon x:Name="MuteIcon" Data="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" /></Button>
+          <Slider x:Name="VolumeSlider" Width="96" Minimum="0" Maximum="100" Value="80" VerticalAlignment="Center" />
+          <Border Classes="sep" />
+          <ComboBox x:Name="RateBox" Width="86" MinHeight="34" Padding="10,4" VerticalAlignment="Center" ToolTip.Tip="Playback speed" />
+          <Button x:Name="AudioButton" Content="Audio" Classes="ghost" ToolTip.Tip="Audio track" />
+          <Button x:Name="SubtitleButton" Content="Subtitles" Classes="ghost" ToolTip.Tip="Subtitles" />
+          <Border Classes="sep" />
+          <Button x:Name="VidFullscreenButton" Classes="icon" ToolTip.Tip="Fullscreen (F)"><PathIcon Data="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" /></Button>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

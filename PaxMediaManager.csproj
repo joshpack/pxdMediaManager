@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PaxMediaManager</RootNamespace>
+    <AssemblyName>PaxMediaManager</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- the spade, so Explorer, shortcuts and Apps & features show the app's own icon (drawn by the setup program in installer\Setup) -->
+    <ApplicationIcon Condition="Exists('installer\spade.ico')">installer\spade.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+    <PackageReference Include="LibVLCSharp" Version="3.10.1" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.24" />
+  </ItemGroup>
+
+  <!-- The VLC package ships every CPU flavour and the native libs ship debug symbols; keep only what win-x64 needs. -->
+  <Target Name="TrimPublish" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <ItemGroup>
+      <_PruneFiles Include="$(PublishDir)libvlc\win-x86\**;$(PublishDir)libvlc\win-arm64\**;$(PublishDir)*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(_PruneFiles)" />
+    <RemoveDir Directories="$(PublishDir)libvlc\win-x86;$(PublishDir)libvlc\win-arm64" />
+  </Target>
+
+  <!-- the installer is its own project (installer\Setup): not part of the app -->
+  <ItemGroup>
+    <Compile Remove="installer\**" />
+    <None Remove="installer\**" />
+    <EmbeddedResource Remove="installer\**" />
+    <AvaloniaResource Remove="installer\**" />
+  </ItemGroup>
+
+</Project>

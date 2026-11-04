@@ -24,7 +24,7 @@ public sealed class ViewerSettings
     public static ViewerSettings Shared { get; } = Load();
 
     private static string FilePath =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", "viewer.json");
+        System.IO.Path.Combine(PaxMediaManager.Services.AppPaths.DataDir, "viewer.json");
 
     public static ViewerSettings Load()
     {

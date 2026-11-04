@@ -65,10 +65,7 @@ public sealed partial class AppSettings
     public static string DefaultTargetFolder => "";
 
     public static string SettingsFile =>
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "PaxMediaManager",
-            "settings.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "settings.json");
 
     /// <summary>True when no settings file existed yet (first launch).</summary>
     [System.Text.Json.Serialization.JsonIgnore]

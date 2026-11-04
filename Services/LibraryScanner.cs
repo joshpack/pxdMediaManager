@@ -354,10 +354,7 @@ public static class LibrarySizeCache
     private static Dictionary<string, long>? _cache;
 
     private static string CacheFile =>
-        System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "PaxMediaManager",
-            "library-cache.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "library-cache.json");
 
     private static string Key(LibraryItem item) =>
         Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(

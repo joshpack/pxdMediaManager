@@ -32,7 +32,7 @@ public sealed class OmdbClient
     public bool Rejected { get; private set; }
 
     public static string RatingsDir =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", "ratings");
+        System.IO.Path.Combine(AppPaths.DataDir, "ratings");
 
     public async Task<(bool Ok, string Message)> TestAsync(CancellationToken ct = default)
     {

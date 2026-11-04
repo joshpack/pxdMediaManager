@@ -27,6 +27,8 @@ internal static class Program
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var oldDir = Path.Combine(appData, "TorrentMonitor");
             var newDir = Path.Combine(appData, "PaxMediaManager");
+            if (Environment.GetEnvironmentVariable("PAXMM_DATA_DIR") is { Length: > 0 })
+                return; // data lives somewhere else on purpose (tests, screenshots): leave the real folders alone
             if (Directory.Exists(newDir) || !Directory.Exists(oldDir))
                 return;
 

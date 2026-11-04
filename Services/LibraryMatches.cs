@@ -12,10 +12,7 @@ public static class LibraryMatches
     private static Dictionary<string, TmdbMatch>? _overrides;
 
     private static string FilePath =>
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "PaxMediaManager",
-            "library-matches.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "library-matches.json");
 
     public static string KeyFor(LibraryItem item) =>
         Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(

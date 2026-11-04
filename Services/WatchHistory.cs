@@ -32,7 +32,7 @@ public static partial class WatchHistory
     public static event Action? Changed;
 
     private static string FilePath =>
-        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", "watch-history.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "watch-history.json");
 
     private static string Key(string path) => System.IO.Path.GetFullPath(path).ToLowerInvariant();
 

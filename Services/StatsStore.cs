@@ -41,10 +41,7 @@ public sealed class StatsStore : IDisposable
     public SyncInfo Sync { get; private set; } = new(false, false, Array.Empty<string>(), "Not syncing.");
 
     public static string StatsFile =>
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "PaxMediaManager",
-            "stats.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "stats.json");
 
     public static StatsStore Load(AppSettings? settings = null)
     {

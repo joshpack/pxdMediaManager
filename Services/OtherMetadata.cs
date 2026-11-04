@@ -11,7 +11,7 @@ internal static partial class MetaHttp
     public static readonly HttpClient Client = Create();
 
     public static string Dir(string name) =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", name);
+        System.IO.Path.Combine(AppPaths.DataDir, name);
 
     public static string Hash(string s) =>
         Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(s)))[..24];

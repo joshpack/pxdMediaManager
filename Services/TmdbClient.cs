@@ -101,7 +101,7 @@ public sealed class TmdbClient
     public bool Rejected { get; private set; }
 
     private static string AppDataDir =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager");
+        AppPaths.DataDir;
 
     public static string PosterDir => Path.Combine(AppDataDir, "posters");
     public static string MatchDir => Path.Combine(AppDataDir, "matches");

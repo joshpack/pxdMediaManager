@@ -60,7 +60,7 @@ public sealed class DiscoverService
     // ---- Not interested -------------------------------------------------------------------------------------------
 
     private static string DismissedFile =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", "discover-dismissed.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "discover-dismissed.json");
 
     private static HashSet<string>? _dismissed;
 

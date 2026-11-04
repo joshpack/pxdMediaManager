@@ -46,10 +46,7 @@ public sealed class CompletionMover : IDisposable
     public event Action<string, string>? ItemArrived;         // category name, where it landed (file or folder)
 
     public static string PendingFile =>
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "PaxMediaManager",
-            "pending.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "pending.json");
 
     public IReadOnlyList<PendingMove> Snapshot()
     {

@@ -23,7 +23,7 @@ public sealed class MediaSpecs
     public string Resolution => Width > 0 || Height > 0 ? ResolutionName(Width, Height) : "";
 
     private static string DiskCacheFile =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PaxMediaManager", "specs-cache.json");
+        System.IO.Path.Combine(AppPaths.DataDir, "specs-cache.json");
 
     private static Dictionary<string, MediaSpecs>? _disk;
     private static DateTime _diskDirtySince = DateTime.MaxValue;

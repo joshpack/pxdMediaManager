@@ -24,10 +24,11 @@ public partial class ProgressOverlay : Window
         IsHitTestVisible = false;
     }
 
-    public void Begin(string category, long total)
+    public void Begin(string category, string name, long total)
     {
         _hideTimer.Stop();
         this.FindControl<TextBlock>("TitleText")!.Text = $"Moving to {category}";
+        this.FindControl<TextBlock>("NameText")!.Text = name;
         this.FindControl<TextBlock>("DetailText")!.Text = $"0 B of {StatsStore.FormatBytes(total)}";
         SetPercent(0);
         ShowAtTopCenter();

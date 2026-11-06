@@ -40,7 +40,7 @@ public sealed class CompletionMover : IDisposable
 
     public event Action<ActivityKind, string, string>? Activity;
     public event Action? PendingChanged;
-    public event Action<string, long>? MoveStarted;          // category name, total bytes
+    public event Action<string, string, long>? MoveStarted;  // category name, item name, total bytes
     public event Action<MoveProgress>? MoveProgressed;
     public event Action<bool, string>? MoveFinished;          // success, message
     public event Action<string, string>? ItemArrived;         // category name, where it landed (file or folder)
@@ -236,7 +236,7 @@ public sealed class CompletionMover : IDisposable
 
             var total = isDir ? DirSize(source) : new FileInfo(source).Length;
             var dest = UniquePath(Path.Combine(categoryDir, p.Name), isDir);
-            MoveStarted?.Invoke(p.CategoryName, total);
+            MoveStarted?.Invoke(p.CategoryName, Path.GetFileName(dest), total);
 
             if (TryRenameInPlace(source, dest, categoryDir, isDir))
             {

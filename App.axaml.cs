@@ -134,19 +134,32 @@ public partial class App : Application
     {
         _mover.Activity += (kind, title, detail) =>
             Dispatcher.UIThread.Post(() => _main.AddActivity(kind, title, detail));
-        _mover.MoveStarted += (category, total) => Dispatcher.UIThread.Post(() =>
+        // Moves into a category that isn't shown in the Library happen silently: no overlay, no arrival notice.
+        // (They still go in the activity log.) Only one move runs at a time, so one flag covers the current move.
+        var showMove = false;
+        _mover.MoveStarted += (category, name, total) => Dispatcher.UIThread.Post(() =>
         {
+            showMove = IsShownInLibrary(category);
+            if (!showMove)
+                return;
             _overlay ??= new ProgressOverlay { Icon = icon };
-            _overlay.Begin(category, total);
+            _overlay.Begin(category, name, total);
         });
-        _mover.MoveProgressed += p => Dispatcher.UIThread.Post(() => _overlay?.Update(p));
-        _mover.MoveFinished += (ok, message) => Dispatcher.UIThread.Post(() => _overlay?.Finish(ok, message));
+        _mover.MoveProgressed += p => Dispatcher.UIThread.Post(() =>
+        {
+            if (showMove)
+                _overlay?.Update(p);
+        });
+        _mover.MoveFinished += (ok, message) => Dispatcher.UIThread.Post(() =>
+        {
+            if (showMove)
+                _overlay?.Finish(ok, message);
+        });
 
         // A finished download landed in a category: show what it is (poster, rating) with a Play button.
         _mover.ItemArrived += (category, path) => Dispatcher.UIThread.Post(() =>
         {
-            var cat = _settings.Categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.OrdinalIgnoreCase));
-            if (!_settings.ArrivalAlerts || cat is null || cat.ExcludeFromLibrary)
+            if (!_settings.ArrivalAlerts || !IsShownInLibrary(category))
                 return;
             try
             {
@@ -158,6 +171,11 @@ public partial class App : Application
             }
         });
     }
+
+    /// <summary>True when the category exists and its "Library" box is ticked in Settings.</summary>
+    private bool IsShownInLibrary(string category) =>
+        _settings.Categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.OrdinalIgnoreCase))
+            is { ExcludeFromLibrary: false };
 
     /// <summary>
     /// Opens a picture/video window for a file or folder (optionally straight into a slideshow). Each call gets its own

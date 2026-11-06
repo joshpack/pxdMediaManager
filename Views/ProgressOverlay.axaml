@@ -44,6 +44,8 @@
           <TextBlock x:Name="PercentText" Grid.Column="1" Text="0%" FontWeight="Bold" Foreground="#19F58C"
                      Effect="drop-shadow(0 0 10 #8019F58C)" />
         </Grid>
+        <TextBlock x:Name="NameText" FontSize="12" Foreground="#C9D3E6" TextTrimming="CharacterEllipsis"
+                   Margin="0,-4,0,0" />
         <ProgressBar x:Name="Bar" Minimum="0" Maximum="100" Value="0">
           <ProgressBar.Foreground>
             <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">

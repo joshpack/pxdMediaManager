@@ -60,7 +60,8 @@ internal static class Ui
         return row;
     }
 
-    public static Window ToolWindow(string title, double width, double height, Control content)
+    /// <summary>A code-built window with the PAX title bar; its placement is remembered under <paramref name="placementKey"/>.</summary>
+    public static Window ToolWindow(string title, double width, double height, Control content, string placementKey)
     {
         var window = new Window
         {
@@ -72,6 +73,7 @@ internal static class Ui
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
             Content = new ScrollViewer { Content = new Border { Padding = new Thickness(24), Child = content } },
         };
+        AppChrome.Apply(window, placementKey);
         window.KeyDown += (_, e) =>
         {
             if (e.Key == Key.Escape)
@@ -168,7 +170,7 @@ public sealed class StatsWindow
         Section("Biggest titles", items.Where(i => i.Size is > 0).OrderByDescending(i => i.Size).Take(10)
             .Select(i => (i.DisplayTitle, (double)i.Size!.Value, StatsStore.FormatBytes(i.Size.Value))));
 
-        _window = Ui.ToolWindow("Library statistics", 820, 780, root);
+        _window = Ui.ToolWindow("Library statistics", 820, 780, root, "stats");
     }
 
     public static implicit operator Window(StatsWindow w) => w._window;
@@ -223,7 +225,7 @@ public sealed class DuplicatesWindow
             root.Children.Add(Ui.Card(panel));
         }
 
-        _window = Ui.ToolWindow("Duplicates & upgrades", 860, 720, root);
+        _window = Ui.ToolWindow("Duplicates & upgrades", 860, 720, root, "duplicates");
     }
 
     private static string MetaKey(string s) => System.Text.RegularExpressions.Regex.Replace(s.ToLowerInvariant(), "[^a-z0-9]+", "");

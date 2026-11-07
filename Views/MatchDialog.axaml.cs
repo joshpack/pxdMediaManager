@@ -27,6 +27,7 @@ public partial class MatchDialog : Window
     public MatchDialog()
     {
         InitializeComponent();
+        AppChrome.Apply(this, "match");
     }
 
     public MatchDialog(MetadataService meta, LibraryItem item) : this()

@@ -362,7 +362,7 @@ public sealed class SuggestionWindow
         grid.Children.Add(posterBox);
         Grid.SetColumn(text, 1);
         grid.Children.Add(text);
-        _window = Ui.ToolWindow(s.Match.Title, 820, 520, grid);
+        _window = Ui.ToolWindow(s.Match.Title, 820, 520, grid, "suggestion");
 
         Bitmap? bitmap = null;
         string? trailerKey = null;

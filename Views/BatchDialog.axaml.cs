@@ -21,6 +21,7 @@ public partial class BatchDialog : Window
     public BatchDialog()
     {
         InitializeComponent();
+        AppChrome.Apply(this, "batch", resizable: false);
     }
 
     public BatchDialog(

@@ -60,6 +60,7 @@ public sealed class SetupApp : Application
     {
         RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
         Styles.Add(new FluentTheme());
+        Styles.Add(PaxStandard.PaxChrome.Styles());
     }
 
     public override void OnFrameworkInitializationCompleted()

@@ -13,6 +13,7 @@ public partial class ChoiceDialog : Window
     public ChoiceDialog()
     {
         InitializeComponent();
+        AppChrome.Apply(this, "choice", resizable: false);
     }
 
     public ChoiceDialog(

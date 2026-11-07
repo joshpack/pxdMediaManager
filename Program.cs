@@ -10,7 +10,11 @@ internal static class Program
     public static void Main(string[] args)
     {
         if (!AcquireSingleInstance())
+        {
+            // Already running (maybe with its tray icon hidden): open that copy's window instead.
+            Services.SingleInstance.SignalRunning();
             return;
+        }
 
         MigrateOldData();
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
@@ -58,7 +62,7 @@ internal static class Program
     {
         try
         {
-            var path = Path.Combine(Path.GetTempPath(), "PaxMediaManager.instance.lock");
+            var path = Path.Combine(Path.GetTempPath(), Services.SingleInstance.Name + ".instance.lock");
             _instanceLock = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             return true;
         }

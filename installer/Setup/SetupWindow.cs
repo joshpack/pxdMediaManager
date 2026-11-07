@@ -91,6 +91,12 @@ public sealed class SetupWindow : Window
                 },
             },
         };
+
+        // The PAX title bar, like the app's windows (PaxStandard.cs). Setup runs once, so its placement isn't remembered.
+        var body = (Control)Content;
+        Content = null;
+        Height += 39;
+        Content = PaxStandard.PaxChrome.Wrap(this, body, "PAX Media Manager setup", Brand.Bitmap(36), resizable: false);
     }
 
     private async Task GoAsync()

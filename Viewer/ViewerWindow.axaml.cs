@@ -52,6 +52,9 @@ public partial class ViewerWindow : Window
         Icon = SpadeIcon.CreateWindowIcon();
         Width = _settings.WindowWidth;
         Height = _settings.WindowHeight;
+        // Own title bar (gone in full screen); placement remembered across viewer windows.
+        AppChrome.Apply(this, "viewer");
+        AppChrome.HideTitleBarInFullScreen(this);
 
         _loadingUi = true;
         var speed = this.FindControl<ComboBox>("SpeedBox")!;

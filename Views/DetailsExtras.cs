@@ -18,7 +18,7 @@ public sealed class PersonWindow
         root.Children.Add(Ui.Text(name, 24, null, FontWeight.Bold));
         var status = Ui.Text("Loading from TMDB…", 12, Ui.Muted);
         root.Children.Add(status);
-        _window = Ui.ToolWindow(name, 760, 700, root);
+        _window = Ui.ToolWindow(name, 760, 700, root, "person");
 
         _window.Opened += async (_, _) =>
         {
@@ -95,7 +95,7 @@ public sealed class SubtitleWindow
         root.Children.Add(status);
         var list = new StackPanel { Spacing = 4 };
         root.Children.Add(list);
-        _window = Ui.ToolWindow("Subtitles", 760, 600, root);
+        _window = Ui.ToolWindow("Subtitles", 760, 600, root, "subtitles");
 
         _window.Opened += async (_, _) =>
         {

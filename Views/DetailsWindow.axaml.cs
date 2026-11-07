@@ -51,6 +51,7 @@ public partial class DetailsWindow : Window
         Action<LibraryItem>? showDetails, AppSettings? settings)
     {
         Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
+        AppChrome.Apply(this, "details");
         _item = item;
         _meta = meta;
         _omdb = omdb;

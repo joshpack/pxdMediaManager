@@ -66,6 +66,17 @@ public partial class MainWindow : Window
         _watcher = watcher;
         _stats = stats;
         _mover = mover;
+        // Own title bar; position and maximized state are remembered here, the size per tab below (TabSizes).
+        AppChrome.Apply(this, "main");
+
+        var trayBox = this.FindControl<CheckBox>("TrayIconBox")!;
+        trayBox.IsChecked = TrayLink.Visible;
+        trayBox.IsCheckedChanged += (_, _) =>
+        {
+            if (!_settingTraySwitch)
+                TrayIconSwitched?.Invoke(trayBox.IsChecked == true);
+        };
+        Button("QuitButton").Click += (_, _) => QuitRequested?.Invoke();
 
         var library = this.FindControl<LibraryView>("LibraryPane")!;
         library.Initialize(_settings, OpenFolder, OpenInViewer);
@@ -216,6 +227,24 @@ public partial class MainWindow : Window
         // Wait until the user lets go of the edge before writing anything.
         _sizeSaveTimer.Stop();
         _sizeSaveTimer.Start();
+    }
+
+    // ---- PAX Toolkit link ------------------------------------------------------------------------------------------
+
+    private bool _settingTraySwitch;
+
+    /// <summary>The user flipped Settings → "Show the tray icon".</summary>
+    public event Action<bool>? TrayIconSwitched;
+
+    /// <summary>Settings → "Quit PAX Media Manager" (the way out when the tray icon is hidden).</summary>
+    public event Action? QuitRequested;
+
+    /// <summary>Shows the current tray icon state (e.g. after PAX Toolkit changed it) without reporting it back.</summary>
+    public void SetTrayIconSwitch(bool visible)
+    {
+        _settingTraySwitch = true;
+        this.FindControl<CheckBox>("TrayIconBox")!.IsChecked = visible;
+        _settingTraySwitch = false;
     }
 
     /// <summary>When false (the default) closing the window hides it to the tray instead.</summary>

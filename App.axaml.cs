@@ -21,7 +21,15 @@ public partial class App : Application
     private readonly List<ViewerWindow> _viewers = new();
     private IClassicDesktopStyleApplicationLifetime _lifetime = null!;
 
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    private TrayLink? _trayLink;
+
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+        // PAX App Standard: own title bar on every window, placements in windows.json in the data folder.
+        PaxStandard.PaxChrome.Configure(AppChrome.AppId, AppPaths.DataDir);
+        Styles.Add(PaxStandard.PaxChrome.Styles());
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -43,6 +51,16 @@ public partial class App : Application
             WireMover(icon);
 
             BuildTray(icon);
+            // PAX Toolkit link: the tray icon shows or hides as toolkit.json says, live; Settings has the same switch.
+            _trayLink = new TrayLink(visible => Dispatcher.UIThread.Post(() =>
+            {
+                _tray.IsVisible = visible;
+                _main.SetTrayIconSwitch(visible);
+            }));
+            _main.TrayIconSwitched += visible => _trayLink.Set(visible);
+            _main.QuitRequested += Quit;
+            // Starting the exe again opens this copy's window (the only way in when the tray icon is hidden).
+            SingleInstance.Listen(() => Dispatcher.UIThread.Post(_main.ShowFromTray));
             _watcher.Start();
             _mover.Start();
             _stats.Start();
@@ -93,6 +111,7 @@ public partial class App : Application
         {
             Icon = icon,
             ToolTipText = "PAX Media Manager",
+            IsVisible = TrayLink.Visible,
             Menu = new NativeMenu { open, media, new NativeMenuItemSeparator(), scan, openWatch, openTarget, new NativeMenuItemSeparator(), exit },
         };
         _tray.Clicked += (_, _) => _main.ShowFromTray();
@@ -201,6 +220,7 @@ public partial class App : Application
         _watcher.Dispose();
         _mover.Dispose();
         _stats.Dispose();
+        _trayLink?.Dispose();
         _tray.IsVisible = false;
         _tray.Dispose();
         _lifetime.Shutdown();

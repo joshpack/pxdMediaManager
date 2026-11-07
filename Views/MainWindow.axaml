@@ -275,6 +275,15 @@
                              VerticalAlignment="Center" TextWrapping="Wrap" />
                   <Button x:Name="AutostartButton" Grid.Column="2" Content="Checking…" IsEnabled="False" MinWidth="170" />
                 </Grid>
+                <Border Height="1" Margin="0,8" Background="{StaticResource BorderBrush2}" />
+                <TextBlock Text="TRAY ICON" Classes="label" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                  <CheckBox x:Name="TrayIconBox" Content="Show the tray icon" VerticalAlignment="Center"
+                            ToolTip.Tip="PAX Toolkit has the same switch; either one changes both" />
+                  <Button x:Name="QuitButton" Grid.Column="1" Classes="ghost" Content="Quit PAX Media Manager" />
+                </Grid>
+                <TextBlock Classes="muted" FontSize="11" TextWrapping="Wrap"
+                           Text="Works with PAX Toolkit, which can turn the icon on and off too. With the icon hidden the app keeps running: start it again, or open it from PAX Toolkit, to bring this window back. Closing this window leaves the app running; Quit stops it." />
               </StackPanel>
 
               <Border Height="1" Background="{StaticResource BorderBrush2}" />

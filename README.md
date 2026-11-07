@@ -74,28 +74,28 @@ Downloads are on the [latest release](https://github.com/joshpack/PaxMediaManage
 
 | File | What it is |
 | --- | --- |
-| `PaxMediaManager-1.0.0-win-x64-setup.exe` | Windows installer (recommended) |
-| `PaxMediaManager-1.0.0-win-x64-portable.zip` | Windows, no install: unzip and run |
-| `PaxMediaManager-1.0.0-linux-x64.tar.gz` | Linux x64 (untested build) |
+| `PaxMediaManager-1.0.1-win-x64-setup.exe` | Windows installer (recommended) |
+| `PaxMediaManager-1.0.1-win-x64-portable.zip` | Windows, no install: unzip and run |
+| `PaxMediaManager-1.0.1-linux-x64.tar.gz` | Linux x64 (untested build) |
 
 ### Windows (setup)
 
-1. Download `PaxMediaManager-1.0.0-win-x64-setup.exe` and run it.
+1. Download `PaxMediaManager-1.0.1-win-x64-setup.exe` and run it.
 2. It installs for your user only, so it doesn't ask for administrator rights. It puts the app in `%LOCALAPPDATA%\Programs\PAX Media Manager`, adds a Start menu shortcut (and a desktop one if you tick it) and an entry in **Settings → Apps → Installed apps**.
 3. The app starts in the tray. The first time, its window opens so you can pick your folders.
 
 The setup isn't code-signed, so SmartScreen may warn about it: choose **More info → Run anyway**. You can check the download against its `.sha256` file first:
 
 ```powershell
-(Get-FileHash .\PaxMediaManager-1.0.0-win-x64-setup.exe -Algorithm SHA256).Hash
+(Get-FileHash .\PaxMediaManager-1.0.1-win-x64-setup.exe -Algorithm SHA256).Hash
 ```
 
 **Silent install** (Start menu shortcut, no desktop shortcut):
 
 ```powershell
-Start-Process .\PaxMediaManager-1.0.0-win-x64-setup.exe -ArgumentList '--quiet' -Wait
+Start-Process .\PaxMediaManager-1.0.1-win-x64-setup.exe -ArgumentList '--quiet' -Wait
 # into another folder:
-Start-Process .\PaxMediaManager-1.0.0-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\PAX Media Manager' -Wait
+Start-Process .\PaxMediaManager-1.0.1-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\PAX Media Manager' -Wait
 ```
 
 | Setup option | What it does |
@@ -110,7 +110,7 @@ Start-Process .\PaxMediaManager-1.0.0-win-x64-setup.exe -ArgumentList '--quiet',
 
 ### Windows (portable)
 
-Unzip `PaxMediaManager-1.0.0-win-x64-portable.zip` anywhere and run `PaxMediaManager\PaxMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\PaxMediaManager` for the settings).
+Unzip `PaxMediaManager-1.0.1-win-x64-portable.zip` anywhere and run `PaxMediaManager\PaxMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\PaxMediaManager` for the settings).
 
 ### Linux (x64)
 
@@ -126,7 +126,7 @@ Then unpack and run:
 
 ```bash
 mkdir -p ~/.local/opt
-tar -xzf PaxMediaManager-1.0.0-linux-x64.tar.gz -C ~/.local/opt
+tar -xzf PaxMediaManager-1.0.1-linux-x64.tar.gz -C ~/.local/opt
 ~/.local/opt/PaxMediaManager/PaxMediaManager --show
 ```
 

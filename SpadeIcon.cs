@@ -17,42 +17,6 @@ public static class SpadeIcon
 
     public static readonly Geometry Geometry = Geometry.Parse(PathData);
 
-    /// <summary>Renders the app icon (spade on a rounded accent tile) to a bitmap for the tray and window icon.</summary>
-    public static WindowIcon CreateWindowIcon(int size = 128)
-    {
-        var tile = new Grid { Width = size, Height = size };
-        tile.Children.Add(new Border
-        {
-            CornerRadius = new CornerRadius(size * 0.22),
-            Background = new LinearGradientBrush
-            {
-                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-                GradientStops =
-                {
-                    new GradientStop(Color.Parse("#00C8FF"), 0),
-                    new GradientStop(Color.Parse("#19F58C"), 1),
-                },
-            },
-        });
-        tile.Children.Add(new Viewbox
-        {
-            Margin = new Thickness(size * 0.2),
-            Child = new ShapePath
-            {
-                Data = Geometry,
-                Fill = new SolidColorBrush(Color.Parse("#04140C")),
-                Width = 100,
-                Height = 100,
-                Stretch = Stretch.Uniform,
-            },
-        });
-
-        tile.Measure(new Size(size, size));
-        tile.Arrange(new Rect(0, 0, size, size));
-
-        var bitmap = new RenderTargetBitmap(new PixelSize(size, size), new Vector(96, 96));
-        bitmap.Render(tile);
-        return new WindowIcon(bitmap);
-    }
+    /// <summary>The app icon for the tray and windows (see <see cref="BrandIcon"/>).</summary>
+    public static WindowIcon CreateWindowIcon(int size = 128) => BrandIcon.Window(size);
 }

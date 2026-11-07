@@ -131,26 +131,8 @@ public static class Brand
         "C48,86 45,92 37,96 L63,96 C55,92 52,86 51.5,76.5 C54,80.5 59,83 65,83 " +
         "C77,83 89,75 89,59 C89,34 50,5 50,5 Z";
 
-    public static Control Tile(double size)
-    {
-        var tile = new Grid { Width = size, Height = size };
-        tile.Children.Add(new Border
-        {
-            CornerRadius = new CornerRadius(size * 0.22),
-            Background = new LinearGradientBrush
-            {
-                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-                GradientStops = { new GradientStop(Color.Parse("#00C8FF"), 0), new GradientStop(Color.Parse("#19F58C"), 1) },
-            },
-        });
-        tile.Children.Add(new Viewbox
-        {
-            Margin = new Thickness(size * 0.2),
-            Child = new ShapePath { Data = Geometry.Parse(Spade), Fill = Brush.Parse("#04140C"), Width = 100, Height = 100, Stretch = Stretch.Uniform },
-        });
-        return tile;
-    }
+    /// <summary>The app's icon (BrandIcon.cs is a copy of the app's own file).</summary>
+    public static Control Tile(double size) => BrandIcon.Build(size);
 
     public static Avalonia.Media.Imaging.RenderTargetBitmap Bitmap(int size)
     {

@@ -21,6 +21,30 @@ public static class Migration
     }
 
     /// <summary>
+    /// A copy installed by the setup program that has since updated itself (pxdUpdate) shows its new version in
+    /// Settings → Apps: the setup program's entry is corrected when it names this copy's folder. Never throws.
+    /// </summary>
+    public static void SetupEntryVersion()
+    {
+        if (!OperatingSystem.IsWindows() || Environment.ProcessPath is not { } exe)
+            return;
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\" + AppChrome.AppId, writable: true);
+            if (key?.GetValue("InstallLocation") is not string folder
+                || !string.Equals(Path.GetFullPath(folder).TrimEnd('\\'), Path.GetDirectoryName(exe)!.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase))
+                return;
+            var version = pxdUpdate.ThisVersion().ToString(3);
+            if (key.GetValue("DisplayVersion") as string != version)
+                key.SetValue("DisplayVersion", version);
+        }
+        catch
+        {
+            /* only the Apps list's version text */
+        }
+    }
+
+    /// <summary>
     /// Brings the settings folder under <paramref name="root"/> (%APPDATA%, or ~/.config on Linux) to its current name:
     /// the folder of the former name (see pxdMigrate.FormerName) is moved; failing that, the folder of the app's first
     /// name, Torrent Monitor, is copied (never moved, so an old install keeps working until it is removed).

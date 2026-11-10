@@ -126,8 +126,100 @@ public static class SelfTest
             }
         });
 
+        // Updating before start (pxdUpdate): never during a self-test or from a bin\ build.
+        Try("update: skipped", () =>
+        {
+            Check("update: skipped for --self-test", !pxdUpdate.BeforeStart(Program.UpdateRepo, Program.UpdateAsset, ["--self-test", folder]));
+            var dir = Path.GetDirectoryName(Environment.ProcessPath ?? "") ?? "";
+            if (dir.Contains(@"\bin\", StringComparison.OrdinalIgnoreCase))
+                Check("update: skipped for a bin\\ build", !pxdUpdate.BeforeStart(Program.UpdateRepo, Program.UpdateAsset, []));
+        });
+
+        // A made-up newer release on a local server, applied to a portable copy and to a copy installed by the setup
+        // program (both temp folders): the same zip updates both, and the setup's own files are kept.
+        Try("update: fake release", () => UpdateFromFakeRelease(Path.Combine(folder, "update"), Check));
+
         lines.Add(failed == 0 ? "ALL PASSED" : $"{failed} FAILED");
         File.WriteAllText(report, string.Join(Environment.NewLine, lines) + Environment.NewLine, new UTF8Encoding(false));
         return failed == 0 ? 0 : 1;
+    }
+
+    private static void UpdateFromFakeRelease(string root, Action<string, bool, string> check)
+    {
+        const string exe = AppChrome.AppId + ".exe";
+        var pkg = Path.Combine(root, "pkg", AppChrome.AppId);   // the portable zip has one top folder
+        Directory.CreateDirectory(Path.Combine(pkg, "libvlc", "win-x64"));
+        File.WriteAllText(Path.Combine(pkg, exe), "new exe");
+        File.WriteAllText(Path.Combine(pkg, "app.dll"), "new dll");
+        File.WriteAllText(Path.Combine(pkg, "libvlc", "win-x64", "libvlc.dll"), "new vlc");
+        var zipName = $"{AppChrome.AppId}-99.0.0-win-x64-portable.zip";
+        var zip = Path.Combine(root, zipName);
+        System.IO.Compression.ZipFile.CreateFromDirectory(Path.Combine(root, "pkg"), zip);
+        var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(zip))).ToLowerInvariant();
+
+        string Copy(string name, bool setup)
+        {
+            var dir = Path.Combine(root, name);
+            Directory.CreateDirectory(Path.Combine(dir, "libvlc", "win-x64"));
+            File.WriteAllText(Path.Combine(dir, exe), "old exe");
+            File.WriteAllText(Path.Combine(dir, "app.dll"), "old dll");
+            File.WriteAllText(Path.Combine(dir, "libvlc", "win-x64", "libvlc.dll"), "old vlc");
+            if (setup)
+                File.WriteAllText(Path.Combine(dir, "uninstall.cmd"), "setup's uninstaller");
+            return dir;
+        }
+
+        var portable = Copy("portable", setup: false);
+        var installed = Copy("installed", setup: true);
+
+        var port = Random.Shared.Next(41000, 49000);
+        var prefix = $"http://127.0.0.1:{port}/";
+        using var listener = new System.Net.HttpListener();
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+        _ = Task.Run(async () =>
+        {
+            while (listener.IsListening)
+            {
+                System.Net.HttpListenerContext ctx;
+                try { ctx = await listener.GetContextAsync(); } catch { return; }
+                byte[] body = ctx.Request.Url!.AbsolutePath switch
+                {
+                    "/repos/" + Program.UpdateRepo + "/releases/latest" => Encoding.UTF8.GetBytes(
+                        $$"""{"tag_name":"v99.0.0","assets":[{"name":"{{AppChrome.AppId}}-99.0.0-win-x64-setup.exe","browser_download_url":"{{prefix}}setup"},{"name":"{{zipName}}","browser_download_url":"{{prefix}}zip"},{"name":"{{zipName}}.sha256","browser_download_url":"{{prefix}}sum"},{"name":"{{AppChrome.AppId}}-99.0.0-linux-x64.tar.gz","browser_download_url":"{{prefix}}tar"}]}"""),
+                    "/zip" => File.ReadAllBytes(zip),
+                    "/sum" => Encoding.ASCII.GetBytes(hash + "  " + zipName),
+                    _ => [],
+                };
+                ctx.Response.StatusCode = body.Length == 0 ? 404 : 200;
+                try { ctx.Response.OutputStream.Write(body); ctx.Response.Close(); } catch { /* client gone */ }
+            }
+        });
+
+        var before = Environment.GetEnvironmentVariable("PXD_UPDATE_API");
+        Environment.SetEnvironmentVariable("PXD_UPDATE_API", prefix.TrimEnd('/'));
+        try
+        {
+            var plan = pxdUpdate.FindUpdateAsync(Program.UpdateRepo, Program.UpdateAsset, pxdUpdate.ThisVersion()).GetAwaiter().GetResult();
+            check("update: the portable zip is picked (not the setup or Linux file)", plan is { } p && p.Zip.EndsWith("/zip") && p.Sum is not null, plan?.Zip ?? "none");
+            check("update: no update when this copy is current",
+                pxdUpdate.FindUpdateAsync(Program.UpdateRepo, Program.UpdateAsset, new Version(99, 0, 0)).GetAwaiter().GetResult() is null, "");
+            foreach (var (name, dir) in new[] { ("portable copy", portable), ("setup-installed copy", installed) })
+            {
+                var ok = pxdUpdate.ApplyAsync(plan!.Value.Zip, plan.Value.Sum, dir, Path.Combine(dir, exe), [], start: false).GetAwaiter().GetResult();
+                pxdUpdate.CleanUp(dir);
+                check($"update: {name} updated in place", ok && File.ReadAllText(Path.Combine(dir, exe)) == "new exe"
+                    && File.ReadAllText(Path.Combine(dir, "app.dll")) == "new dll"
+                    && File.ReadAllText(Path.Combine(dir, "libvlc", "win-x64", "libvlc.dll")) == "new vlc"
+                    && !Directory.EnumerateFiles(dir, "*.pxdold", SearchOption.AllDirectories).Any(), "");
+            }
+
+            check("update: the setup's uninstall.cmd is kept", File.ReadAllText(Path.Combine(installed, "uninstall.cmd")) == "setup's uninstaller", "");
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("PXD_UPDATE_API", before);
+            listener.Stop();
+        }
     }
 }

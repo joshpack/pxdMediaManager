@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>What kind of thing a library folder holds; decides which poster database (if any) to ask.</summary>
 public enum LibraryKind
@@ -874,7 +874,7 @@ public sealed class TmdbClient
     private static HttpClient CreateHttp()
     {
         var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("PaxMediaManager/1.0");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("pxdMediaManager/1.0");
         http.DefaultRequestHeaders.Accept.ParseAdd("application/json");
         return http;
     }

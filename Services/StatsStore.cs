@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 public sealed record StatEntry(DateTime Time, long Bytes);
 

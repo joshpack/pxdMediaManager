@@ -1,4 +1,4 @@
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 public enum TorrentChoice
 {

@@ -4,10 +4,10 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using ShapePath = Avalonia.Controls.Shapes.Path;
 
-namespace PaxMediaManager;
+namespace pxdMediaManager;
 
 /// <summary>
-/// PAX Media Manager's icon: a white spade with a play button on a crimson tile.
+/// pxd Media Manager's icon: a white spade with a play button on a crimson tile.
 /// Drawn from vector shapes so it stays crisp at every size; used for the tray, windows and the exe's .ico.
 /// </summary>
 public static class BrandIcon

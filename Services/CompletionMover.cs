@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>A download we're waiting on. The name is needed to find the data and is deleted once the move finishes.</summary>
 public sealed class PendingMove

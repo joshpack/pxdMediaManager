@@ -7,7 +7,7 @@ using Avalonia.Threading;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 
-namespace PaxMediaManager.Viewer;
+namespace pxdMediaManager.Viewer;
 
 /// <summary>
 /// Thin wrapper over LibVLC that renders into a <see cref="WriteableBitmap"/> through software video callbacks, so the

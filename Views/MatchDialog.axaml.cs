@@ -6,9 +6,9 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 /// <summary>What the user decided in the fix-match window: a chosen title, or "forget my choice".</summary>
 public sealed record MatchDialogResult(TmdbMatch? Match, bool Reset);

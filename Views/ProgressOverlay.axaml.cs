@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Path = Avalonia.Controls.Shapes.Path;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 /// <summary>Small borderless always-on-top card at the top-center of the screen that shows a move in progress.</summary>
 public partial class ProgressOverlay : Window

@@ -3,11 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using PaxMediaManager.Services;
-using PaxMediaManager.Viewer;
-using PaxMediaManager.Views;
+using pxdMediaManager.Services;
+using pxdMediaManager.Viewer;
+using pxdMediaManager.Views;
 
-namespace PaxMediaManager;
+namespace pxdMediaManager;
 
 public partial class App : Application
 {
@@ -26,9 +26,9 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        // PAX App Standard: own title bar on every window, placements in windows.json in the data folder.
-        PaxStandard.PaxChrome.Configure(AppChrome.AppId, AppPaths.DataDir);
-        Styles.Add(PaxStandard.PaxChrome.Styles());
+        // pxd App Standard: own title bar on every window, placements in windows.json in the data folder.
+        pxdStandard.pxdChrome.Configure(AppChrome.AppId, AppPaths.DataDir);
+        Styles.Add(pxdStandard.pxdChrome.Styles());
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -51,7 +51,7 @@ public partial class App : Application
             WireMover(icon);
 
             BuildTray(icon);
-            // PAX Toolkit link: the tray icon shows or hides as toolkit.json says, live; Settings has the same switch.
+            // pxd Toolkit link: the tray icon shows or hides as toolkit.json says, live; Settings has the same switch.
             _trayLink = new TrayLink(visible => Dispatcher.UIThread.Post(() =>
             {
                 _tray.IsVisible = visible;
@@ -89,7 +89,7 @@ public partial class App : Application
 
     private void BuildTray(WindowIcon icon)
     {
-        var open = new NativeMenuItem("Open PAX Media Manager");
+        var open = new NativeMenuItem("Open pxd Media Manager");
         open.Click += (_, _) => _main.ShowFromTray();
 
         var openWatch = new NativeMenuItem("Open watched folder");
@@ -110,7 +110,7 @@ public partial class App : Application
         _tray = new TrayIcon
         {
             Icon = icon,
-            ToolTipText = "PAX Media Manager",
+            ToolTipText = "pxd Media Manager",
             IsVisible = TrayLink.Visible,
             Menu = new NativeMenu { open, media, new NativeMenuItemSeparator(), scan, openWatch, openTarget, new NativeMenuItemSeparator(), exit },
         };

@@ -5,21 +5,35 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using Microsoft.Win32;
+using pxdStandard;
 
-namespace PaxMediaManager.Setup;
+namespace pxdMediaManager.Setup;
 
 /// <summary>
-/// Installs PAX Media Manager for this Windows user: the app folder (from the payload inside this program) into
-/// %LOCALAPPDATA%\Programs\PAX Media Manager, Start menu (and optionally desktop) shortcuts, and an Apps &amp; features
+/// Installs pxd Media Manager for this Windows user: the app folder (from the payload inside this program) into
+/// %LOCALAPPDATA%\Programs\pxd Media Manager, Start menu (and optionally desktop) shortcuts, and an Apps &amp; features
 /// entry whose Uninstall runs uninstall.cmd in that folder. Per user, so no administrator rights; self-contained, so
-/// the PC needs no .NET. Settings (%APPDATA%\PaxMediaManager) are never touched: they survive updates and uninstalls.
+/// the PC needs no .NET. Settings (%APPDATA%\pxdMediaManager) are never touched: they survive updates and uninstalls.
 /// </summary>
 public static class Installer
 {
-    public const string AppName = "PAX Media Manager";
-    private const string ExeName = "PaxMediaManager.exe";
-    private const string UninstallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\PaxMediaManager";
+    public const string AppId = "pxdMediaManager";
+    public const string AppName = "pxd Media Manager";
+    private const string ExeName = AppId + ".exe";
+    private const string UninstallRoot = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\";
+    private const string UninstallKey = UninstallRoot + AppId;
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+
+    // ---- Migration only: what the setup program of the app's former name registered (see pxdMigrate). ----
+    private static string FormerId => pxdMigrate.FormerName(AppId);
+    private static string FormerExeName => FormerId + ".exe";
+    private static string FormerUninstallKey => UninstallRoot + FormerId;
+    /// <summary>The former display name: shortcut names and the default install folder used it.</summary>
+    private static string FormerAppName => pxdMigrate.FormerPrefix.ToUpperInvariant() + " Media Manager";
+    private static string FormerDefaultFolder =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", FormerAppName);
+    private static string FormerStartMenuShortcut => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), FormerAppName + ".lnk");
+    private static string FormerDesktopShortcut => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), FormerAppName + ".lnk");
 
     public static string Version =>
         typeof(Installer).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "1.0.0";
@@ -32,11 +46,43 @@ public static class Installer
     {
         get
         {
-            using var key = Registry.CurrentUser.OpenSubKey(UninstallKey);
-            var folder = key?.GetValue("InstallLocation") as string;
-            return (folder is { Length: > 0 } && File.Exists(Path.Combine(folder, ExeName)) ? folder : null, key?.GetValue("DisplayVersion") as string);
+            using (var key = Registry.CurrentUser.OpenSubKey(UninstallKey))
+            {
+                var folder = key?.GetValue("InstallLocation") as string;
+                if (folder is { Length: > 0 } && File.Exists(Path.Combine(folder, ExeName)))
+                    return (folder, key?.GetValue("DisplayVersion") as string);
+            }
+
+            // Migration: a copy installed under the former name is updated where it is, except that its default
+            // folder (named after the former name) becomes the new default folder.
+            var former = FormerInstall();
+            return former.Folder is null ? (null, null) : (NewFolderFor(former.Folder), former.Version);
         }
     }
+
+    /// <summary>Migration only: the install the former setup program registered, if it's still there.</summary>
+    private static (string? Folder, string? Version) FormerInstall()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(FormerUninstallKey);
+            var folder = key?.GetValue("InstallLocation") as string;
+            return folder is { Length: > 0 } && File.Exists(Path.Combine(folder, FormerExeName))
+                ? (folder, key?.GetValue("DisplayVersion") as string)
+                : (null, null);
+        }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    /// <summary>Migration only: the former default install folder maps to the new default folder; any other folder stays.</summary>
+    private static string NewFolderFor(string formerFolder) =>
+        SameFolder(formerFolder, FormerDefaultFolder) ? DefaultFolder : formerFolder;
+
+    private static bool SameFolder(string a, string b) =>
+        string.Equals(Path.GetFullPath(a).TrimEnd('\\'), Path.GetFullPath(b).TrimEnd('\\'), StringComparison.OrdinalIgnoreCase);
 
     public static bool HasPayload => typeof(Installer).Assembly.GetManifestResourceInfo("payload.zip") is not null;
 
@@ -47,7 +93,12 @@ public static class Installer
     {
         folder = Path.GetFullPath(folder);
         var exe = Path.Combine(folder, ExeName);
+        // Migration: an install made under the former name, and whether it had a desktop shortcut (kept if so).
+        var formerFolder = FormerInstall().Folder;
+        desktop |= File.Exists(FormerDesktopShortcut);
         await UnpackAsync(folder, progress);
+        if (formerFolder is not null && !SameFolder(formerFolder, folder))
+            await CloseRunningAsync(formerFolder);
 
         progress("Adding shortcuts…", 1);
         CreateShortcut(StartMenuShortcut, exe, folder);
@@ -60,7 +111,7 @@ public static class Installer
         {
             key.SetValue("DisplayName", AppName);
             key.SetValue("DisplayVersion", Version);
-            key.SetValue("Publisher", "PAX Digital");
+            key.SetValue("Publisher", "pxd");
             key.SetValue("DisplayIcon", exe + ",0");
             key.SetValue("InstallLocation", folder);
             key.SetValue("UninstallString", $"cmd.exe /c \"\"{Path.Combine(folder, "uninstall.cmd")}\"\"");
@@ -69,9 +120,14 @@ public static class Installer
             key.SetValue("EstimatedSize", (int)(FolderSize(folder) / 1024), RegistryValueKind.DWord);
             key.SetValue("InstallDate", DateTime.Now.ToString("yyyyMMdd"));
         }
-        // A "start at login" entry from an earlier copy keeps pointing at the right program.
+        MigrateFormer(formerFolder, exe);
+        // A "start at login" entry from an earlier copy keeps pointing at the right program (with its arguments).
         using (var run = Registry.CurrentUser.OpenSubKey(RunKey, writable: true))
-            if (run?.GetValue("PaxMediaManager") is string) run.SetValue("PaxMediaManager", $"\"{exe}\"");
+            if (run?.GetValue(AppId) is string current)
+            {
+                var args = pxdMigrate.ArgsOf(current);
+                run.SetValue(AppId, $"\"{exe}\"" + (args.Length > 0 ? " " + args : ""));
+            }
         SHChangeNotify(0x08000000, 0, IntPtr.Zero, IntPtr.Zero); // refresh icons
         progress("Done", 1);
         return exe;
@@ -81,9 +137,9 @@ public static class Installer
     public static async Task UnpackAsync(string folder, Action<string, double> progress)
     {
         folder = Path.GetFullPath(folder);
-        if (!HasPayload) throw new InvalidOperationException("This setup program was built without PAX Media Manager inside it.");
+        if (!HasPayload) throw new InvalidOperationException("This setup program was built without pxd Media Manager inside it.");
 
-        progress("Closing PAX Media Manager if it's running…", 0);
+        progress("Closing pxd Media Manager if it's running…", 0);
         await CloseRunningAsync(folder);
 
         // Unpacked beside the old copy, then swapped in: a half-finished install never replaces a working one.
@@ -116,23 +172,40 @@ public static class Installer
 
     /// <summary>
     /// What Apps &amp; features runs to uninstall: closes the app, removes its shortcuts, entries and folder. Settings and
-    /// the library's caches in %APPDATA%\PaxMediaManager stay, in case it's installed again.
+    /// the library's caches in %APPDATA%\pxdMediaManager stay, in case it's installed again.
     /// </summary>
     private static string UninstallScript(string folder) => $"""
         @echo off
-        rem PAX Media Manager: uninstall (made by its setup program). Settings in %APPDATA%\PaxMediaManager are kept.
+        rem pxd Media Manager: uninstall (made by its setup program). Settings in %APPDATA%\pxdMediaManager are kept.
         taskkill /f /fi "IMAGENAME eq {ExeName}" /fi "USERNAME eq %USERNAME%" >nul 2>&1
         del "{StartMenuShortcut}" >nul 2>&1
         del "{DesktopShortcut}" >nul 2>&1
         reg delete "HKCU\{UninstallKey}" /f >nul 2>&1
-        reg delete "HKCU\{RunKey}" /v PaxMediaManager /f >nul 2>&1
+        reg delete "HKCU\{RunKey}" /v pxdMediaManager /f >nul 2>&1
         cd /d "%TEMP%"
         start "" /min cmd /c "ping 127.0.0.1 -n 3 >nul & rmdir /s /q "{folder}""
         """;
 
+    /// <summary>
+    /// Migration only, after the new copy is installed and registered: removes what the former name's setup program
+    /// registered (its Apps &amp; features entry, its Start menu and desktop shortcuts and, when the app now lives in a
+    /// different folder, the former folder) and moves its "start at login" entry to the new name and program. Safe to
+    /// repeat: once those are gone there is nothing left to do.
+    /// </summary>
+    private static void MigrateFormer(string? formerFolder, string exe)
+    {
+        TryDelete(FormerStartMenuShortcut);
+        TryDelete(FormerDesktopShortcut);
+        try { Registry.CurrentUser.DeleteSubKeyTree(FormerUninstallKey, throwOnMissingSubKey: false); } catch { }
+        pxdMigrate.RunEntry(FormerId, AppId, exe);
+        if (formerFolder is not null && !SameFolder(formerFolder, Path.GetDirectoryName(exe)!))
+            TryDeleteFolder(formerFolder);
+    }
+
     private static async Task CloseRunningAsync(string folder)
     {
-        foreach (var p in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(ExeName)))
+        // Migration: a copy of the former name's program in the folder is closed too.
+        foreach (var p in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(ExeName)).Concat(Process.GetProcessesByName(FormerId)))
         {
             try
             {

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="PaxMediaManager.Views.ProgressOverlay"
+        x:Class="pxdMediaManager.Views.ProgressOverlay"
         Width="440" SizeToContent="Height"
         CanResize="False" Topmost="True" ShowInTaskbar="False" ShowActivated="False"
         WindowDecorations="None"

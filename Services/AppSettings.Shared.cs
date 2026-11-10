@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Where shared settings stand, for display in the UI.</summary>
 public sealed record SharedSettingsInfo(bool Enabled, bool Reachable, string FilePath, IReadOnlyList<string> Machines, string Message);

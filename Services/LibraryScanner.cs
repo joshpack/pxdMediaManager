@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>One movie, show, game, album... found at the top level of a category folder.</summary>
 public sealed class LibraryItem

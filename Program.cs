@@ -1,6 +1,6 @@
 using Avalonia;
 
-namespace PaxMediaManager;
+namespace pxdMediaManager;
 
 internal static class Program
 {
@@ -9,6 +9,13 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        if (args.Length > 0 && args[0] == "--self-test")
+        {
+            // Checks without a window or the real settings (see Services/SelfTest.cs); results in <folder>\report.txt.
+            Environment.ExitCode = Services.SelfTest.Run(args.Length > 1 ? args[1] : Path.Combine(Path.GetTempPath(), "pxdMediaManager-selftest"));
+            return;
+        }
+
         if (!AcquireSingleInstance())
         {
             // Already running (maybe with its tray icon hidden): open that copy's window instead.
@@ -16,36 +23,8 @@ internal static class Program
             return;
         }
 
-        MigrateOldData();
+        Services.Migration.Run();
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-    }
-
-    /// <summary>
-    /// The app used to be called Torrent Monitor and kept its data in a "TorrentMonitor" folder. On the first run under the
-    /// new name that folder is copied across (never moved, so the old install keeps working until it is removed).
-    /// </summary>
-    private static void MigrateOldData()
-    {
-        try
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var oldDir = Path.Combine(appData, "TorrentMonitor");
-            var newDir = Path.Combine(appData, "PaxMediaManager");
-            if (Environment.GetEnvironmentVariable("PAXMM_DATA_DIR") is { Length: > 0 })
-                return; // data lives somewhere else on purpose (tests, screenshots): leave the real folders alone
-            if (Directory.Exists(newDir) || !Directory.Exists(oldDir))
-                return;
-
-            foreach (var dir in Directory.EnumerateDirectories(oldDir, "*", SearchOption.AllDirectories))
-                Directory.CreateDirectory(Path.Combine(newDir, Path.GetRelativePath(oldDir, dir)));
-            Directory.CreateDirectory(newDir);
-            foreach (var file in Directory.EnumerateFiles(oldDir, "*", SearchOption.AllDirectories))
-                File.Copy(file, Path.Combine(newDir, Path.GetRelativePath(oldDir, file)), overwrite: false);
-        }
-        catch
-        {
-            /* starting fresh is better than not starting */
-        }
     }
 
     public static AppBuilder BuildAvaloniaApp() =>

@@ -3,8 +3,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Microsoft.Win32;
+using pxdStandard;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 public enum AutostartState
 {
@@ -19,7 +20,7 @@ public sealed record AutostartStatus(AutostartState State, string Message);
 /// <summary>Checks and manages "start at login" per platform, always for the current user and without elevation.</summary>
 public static class Autostart
 {
-    private const string AppName = "PaxMediaManager";
+    private const string AppName = AppChrome.AppId;
     private const string WindowsRunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private const string LegacyTaskName = "TorrentMonitor";   // the old app's scheduled task, which really is named that
     private const string OldRunValueName = "TorrentMonitor";  // and its login entry in the registry
@@ -63,6 +64,45 @@ public static class Autostart
         {
             WriteFile(LinuxDesktopPath, LinuxDesktop(command));
         }
+    }
+
+    /// <summary>
+    /// Migration from the app's former name (see pxdMigrate), run once at start-up: an existing login entry that starts
+    /// the former program is moved to the new name and points at this program instead (Windows: the Run value, keeping
+    /// its arguments and Task Manager's enabled/disabled state; Linux/macOS: the autostart file is rewritten). Never
+    /// turns "start at login" on, safe to repeat, never throws.
+    /// </summary>
+    public static void MigrateFormer()
+    {
+        try
+        {
+            // "dotnet pxdMediaManager.dll" (a development run) is never written into a login entry by a migration.
+            if (Path.GetFileNameWithoutExtension(Environment.ProcessPath ?? "").Equals("dotnet", StringComparison.OrdinalIgnoreCase))
+                return;
+            var command = LaunchCommand();
+            if (command is null)
+                return;
+            if (OperatingSystem.IsWindows())
+                pxdMigrate.RunEntry(pxdMigrate.FormerName(AppName), AppName, command.Trim('"'));
+            else
+                RewriteFormerFile(OperatingSystem.IsMacOS() ? MacPlistPath : LinuxDesktopPath, command, OperatingSystem.IsMacOS());
+        }
+        catch
+        {
+            /* the Settings tab still offers to fix the entry */
+        }
+    }
+
+    /// <summary>
+    /// Migration only: rewrites the autostart file at <paramref name="path"/> to start <paramref name="command"/> when it
+    /// still starts the former program (its name, pxdMigrate.FormerName, is in the file). True if it was rewritten.
+    /// </summary>
+    public static bool RewriteFormerFile(string path, string command, bool mac)
+    {
+        if (!File.Exists(path) || !File.ReadAllText(path).Contains(pxdMigrate.FormerName(AppName), StringComparison.Ordinal))
+            return false;
+        WriteFile(path, mac ? MacPlist(command) : LinuxDesktop(command));
+        return true;
     }
 
     public static void Disable()
@@ -109,7 +149,7 @@ public static class Autostart
         }
 
         if (oldRun is not null)
-            return new AutostartStatus(AutostartState.Outdated, "The previous Torrent Monitor login entry is still set up. Switch it to PAX Media Manager?");
+            return new AutostartStatus(AutostartState.Outdated, "The previous Torrent Monitor login entry is still set up. Switch it to pxd Media Manager?");
 
         if (LegacyTaskXml() is { } xml)
         {
@@ -203,7 +243,7 @@ public static class Autostart
         """;
 
     private static string LinuxDesktop(string command) =>
-        $"[Desktop Entry]\nType=Application\nName=PAX Media Manager\nExec={command}\nX-GNOME-Autostart-enabled=true\nTerminal=false\n";
+        $"[Desktop Entry]\nType=Application\nName=pxd Media Manager\nExec={command}\nX-GNOME-Autostart-enabled=true\nTerminal=false\n";
 
     private static AutostartStatus FileStatus(string path, string command)
     {
@@ -233,7 +273,7 @@ public static class Autostart
         if (OperatingSystem.IsWindows())
             exe = ToUncIfMapped(exe);
 
-        // Running via "dotnet PaxMediaManager.dll" (e.g. dotnet run): register the dll under dotnet instead.
+        // Running via "dotnet pxdMediaManager.dll" (e.g. dotnet run): register the dll under dotnet instead.
         if (Path.GetFileNameWithoutExtension(exe).Equals("dotnet", StringComparison.OrdinalIgnoreCase))
         {
             var dll = Environment.GetCommandLineArgs().FirstOrDefault();

@@ -5,7 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 
-namespace PaxMediaManager.Viewer;
+namespace pxdMediaManager.Viewer;
 
 /// <summary>
 /// Shows one picture and lets you zoom (mouse wheel, around the cursor), pan (drag), rotate, and jump between "fit" and

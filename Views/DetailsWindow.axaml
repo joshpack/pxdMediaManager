@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="PaxMediaManager.Views.DetailsWindow"
+        x:Class="pxdMediaManager.Views.DetailsWindow"
         Title="Details"
         Width="1000" Height="740" MinWidth="740" MinHeight="540"
         WindowStartupLocation="CenterOwner">

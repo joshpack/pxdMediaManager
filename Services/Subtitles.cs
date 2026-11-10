@@ -2,7 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>One subtitle file OpenSubtitles offers for a film or episode.</summary>
 public sealed record SubtitleResult(int FileId, string Language, string Release, int Downloads, bool HearingImpaired, string FileName);
@@ -17,7 +17,7 @@ public sealed class OpenSubtitlesClient
     private const string DefaultApi = "https://api.opensubtitles.com/api/v1";
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(20) };
     private readonly string _key;
-    private readonly string _api = Environment.GetEnvironmentVariable("PAXMM_OPENSUBTITLES_API")?.TrimEnd('/') ?? DefaultApi;
+    private readonly string _api = Environment.GetEnvironmentVariable("PXDMM_OPENSUBTITLES_API")?.TrimEnd('/') ?? DefaultApi;
 
     public OpenSubtitlesClient(string key) => _key = key.Trim();
 
@@ -26,7 +26,7 @@ public sealed class OpenSubtitlesClient
         var r = new HttpRequestMessage(method, _api + path);
         r.Headers.Add("Api-Key", _key);
         // OpenSubtitles requires an identifying User-Agent of the form "AppName vX.Y".
-        r.Headers.UserAgent.ParseAdd("PaxMediaManager v1.0");
+        r.Headers.UserAgent.ParseAdd("pxdMediaManager v1.0");
         r.Headers.Accept.ParseAdd("application/json");
         return r;
     }

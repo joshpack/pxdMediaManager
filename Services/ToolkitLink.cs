@@ -1,26 +1,26 @@
 using System.IO.Pipes;
 using System.Security.Cryptography;
 using System.Text;
-using PaxStandard;
+using pxdStandard;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>
-/// One copy of the app per user. Starting the exe again (from a shortcut, or from PAX Toolkit) asks the running copy to
+/// One copy of the app per user. Starting the exe again (from a shortcut, or from pxd Toolkit) asks the running copy to
 /// open its window, which matters most when its tray icon is hidden.
 /// </summary>
 public static class SingleInstance
 {
     /// <summary>
-    /// The instance name. A different data folder (PAXMM_DATA_DIR, used by tests) is a separate instance, so a test copy
+    /// The instance name. A different data folder (PXDMM_DATA_DIR, used by tests) is a separate instance, so a test copy
     /// never talks to, or is blocked by, the copy that is really in use.
     /// </summary>
     public static string Name
     {
         get
         {
-            var name = "PaxMediaManager";
-            if (Environment.GetEnvironmentVariable("PAXMM_DATA_DIR") is { Length: > 0 } dir)
+            var name = "pxdMediaManager";
+            if (Environment.GetEnvironmentVariable("PXDMM_DATA_DIR") is { Length: > 0 } dir)
                 name += "-" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(dir).ToLowerInvariant())))[..12];
             return name;
         }
@@ -74,8 +74,8 @@ public static class SingleInstance
 }
 
 /// <summary>
-/// The tray icon's visibility as PAX Toolkit and the app's own Settings set it (%APPDATA%\PAX\toolkit.json →
-/// apps.PaxMediaManager.trayIcon). Calls <c>apply</c> with the current state at start and whenever the file changes.
+/// The tray icon's visibility as pxd Toolkit and the app's own Settings set it (%APPDATA%\pxd\toolkit.json →
+/// apps.pxdMediaManager.trayIcon). Calls <c>apply</c> with the current state at start and whenever the file changes.
 /// </summary>
 public sealed class TrayLink : IDisposable
 {
@@ -89,7 +89,7 @@ public sealed class TrayLink : IDisposable
         apply(Visible);
         try
         {
-            _watch = PaxLink.Watch(() => _apply(Visible));
+            _watch = pxdLink.Watch(() => _apply(Visible));
         }
         catch
         {
@@ -97,12 +97,12 @@ public sealed class TrayLink : IDisposable
         }
     }
 
-    public static bool Visible => PaxLink.TrayIconVisible(AppChrome.AppId);
+    public static bool Visible => pxdLink.TrayIconVisible(AppChrome.AppId);
 
-    /// <summary>Saves the choice for PAX Toolkit too; the file watcher then applies it.</summary>
+    /// <summary>Saves the choice for pxd Toolkit too; the file watcher then applies it.</summary>
     public void Set(bool visible)
     {
-        PaxLink.SetTrayIconVisible(AppChrome.AppId, visible);
+        pxdLink.SetTrayIconVisible(AppChrome.AppId, visible);
         _apply(visible);
     }
 

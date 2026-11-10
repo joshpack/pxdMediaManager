@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>How far one video file has been watched.</summary>
 public sealed class WatchEntry
@@ -20,7 +20,7 @@ public sealed record EpisodeFile(int Season, int Episode, string Path, long Byte
 
 /// <summary>
 /// Remembers where each video was stopped (for "resume" and "continue watching") and which were finished. Kept in
-/// %APPDATA%\PaxMediaManager\watch-history.json on this machine.
+/// %APPDATA%\pxdMediaManager\watch-history.json on this machine.
 /// </summary>
 public static partial class WatchHistory
 {

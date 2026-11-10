@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Shared plumbing for the keyless metadata sources (Steam, Audible, AniList): HTTP, disk cache, title matching.</summary>
 internal static partial class MetaHttp
@@ -91,7 +91,7 @@ internal static partial class MetaHttp
     private static HttpClient Create()
     {
         var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("PaxMediaManager/1.0");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("pxdMediaManager/1.0");
         return http;
     }
 }
@@ -102,7 +102,7 @@ internal static partial class MetaHttp
 /// </summary>
 public static class SteamClient
 {
-    private static readonly string Store = Environment.GetEnvironmentVariable("PAXMM_STEAM_API")?.TrimEnd('/') ?? "https://store.steampowered.com";
+    private static readonly string Store = Environment.GetEnvironmentVariable("PXDMM_STEAM_API")?.TrimEnd('/') ?? "https://store.steampowered.com";
 
     public static async Task<List<TmdbMatch>> SearchAsync(string query, CancellationToken ct)
     {
@@ -291,7 +291,7 @@ public static class SteamClient
 
         try
         {
-            var spy = Environment.GetEnvironmentVariable("PAXMM_STEAMSPY_API") ?? "https://steamspy.com/api.php";
+            var spy = Environment.GetEnvironmentVariable("PXDMM_STEAMSPY_API") ?? "https://steamspy.com/api.php";
             using var response = await MetaHttp.Client.GetAsync($"{spy}?request=top100in2weeks", ct).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
@@ -348,7 +348,7 @@ public static class SteamClient
 /// </summary>
 public static partial class AudibleClient
 {
-    private static readonly string Api = Environment.GetEnvironmentVariable("PAXMM_AUDIBLE_API")?.TrimEnd('/') ?? "https://api.audible.com";
+    private static readonly string Api = Environment.GetEnvironmentVariable("PXDMM_AUDIBLE_API")?.TrimEnd('/') ?? "https://api.audible.com";
     private const string Groups = "contributors,product_desc,product_attrs,media,rating,series,category_ladders";
 
     /// <summary>Turns a folder name like "Andy Weir - Project Hail Mary (2021) [Ray Porter] 64k" into search words.</summary>
@@ -545,7 +545,7 @@ public static partial class AudibleClient
 /// <summary>AniList (no key needed): the community score for an anime, looked up by title. Cached for good.</summary>
 public static class AniListClient
 {
-    private static readonly string Api = Environment.GetEnvironmentVariable("PAXMM_ANILIST_API") ?? "https://graphql.anilist.co";
+    private static readonly string Api = Environment.GetEnvironmentVariable("PXDMM_ANILIST_API") ?? "https://graphql.anilist.co";
 
     public static async Task<RatingScore?> GetScoreAsync(string title, CancellationToken ct)
     {

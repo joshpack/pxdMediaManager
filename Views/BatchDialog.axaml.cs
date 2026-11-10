@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 /// <summary>
 /// Startup prompt for torrents that were already in the watch folder. One action applies to every ticked file, but each

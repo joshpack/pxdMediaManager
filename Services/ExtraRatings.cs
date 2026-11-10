@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>One site's score for a title, in that site's own scale (see the details window for how each is shown).</summary>
 public sealed record RatingScore(string Source, double Value, int? Votes);
@@ -15,7 +15,7 @@ public sealed class MdbListClient
 {
     private const string DefaultApi = "https://api.mdblist.com";
     private readonly string _key;
-    private readonly string _api = Environment.GetEnvironmentVariable("PAXMM_MDBLIST_API")?.TrimEnd('/') ?? DefaultApi;
+    private readonly string _api = Environment.GetEnvironmentVariable("PXDMM_MDBLIST_API")?.TrimEnd('/') ?? DefaultApi;
 
     public MdbListClient(string key) => _key = key.Trim();
 
@@ -108,7 +108,7 @@ public sealed class MdbListClient
 /// <summary>TVmaze (tvmaze.com): free, no key. Its user rating for TV shows, looked up by IMDb ID and cached forever.</summary>
 public static class TvMazeClient
 {
-    private static readonly string Api = Environment.GetEnvironmentVariable("PAXMM_TVMAZE_API")?.TrimEnd('/') ?? "https://api.tvmaze.com";
+    private static readonly string Api = Environment.GetEnvironmentVariable("PXDMM_TVMAZE_API")?.TrimEnd('/') ?? "https://api.tvmaze.com";
 
     public static async Task<RatingScore?> GetAsync(string? imdbId, CancellationToken ct)
     {
@@ -209,7 +209,7 @@ internal static class RatingsHttp
     private static HttpClient Create()
     {
         var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("PaxMediaManager/1.0");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("pxdMediaManager/1.0");
         http.DefaultRequestHeaders.Accept.ParseAdd("application/json");
         return http;
     }

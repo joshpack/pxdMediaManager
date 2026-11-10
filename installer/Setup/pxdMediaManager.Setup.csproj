@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- pax-media-manager-setup.exe: one file that installs PAX Media Manager for the current user (no admin, no .NET
+  <!-- pxd-media-manager-setup.exe: one file that installs pxd Media Manager for the current user (no admin, no .NET
        needed). The app itself is a folder (its video player's native libraries have to be real files), so it travels
        inside this program as payload.zip, made by ..\build-setup.ps1. -->
   <PropertyGroup>
@@ -8,11 +8,11 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>PaxMediaManager.Setup</RootNamespace>
-    <AssemblyName>pax-media-manager-setup</AssemblyName>
-    <Product>PAX Media Manager</Product>
-    <Company>PAX Digital</Company>
-    <Version>1.1.0</Version>
+    <RootNamespace>pxdMediaManager.Setup</RootNamespace>
+    <AssemblyName>pxd-media-manager-setup</AssemblyName>
+    <Product>pxd Media Manager</Product>
+    <Company>pxd</Company>
+    <Version>1.2.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon Condition="Exists('..\spade.ico')">..\spade.ico</ApplicationIcon>

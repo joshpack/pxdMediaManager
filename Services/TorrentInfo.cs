@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Reads the total content size out of a .torrent file (a bencoded dictionary) without any torrent library.</summary>
 public static class TorrentInfo

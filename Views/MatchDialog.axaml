@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="PaxMediaManager.Views.MatchDialog"
+        x:Class="pxdMediaManager.Views.MatchDialog"
         Title="Fix match"
         Width="680" Height="660" MinWidth="540" MinHeight="480"
         WindowStartupLocation="CenterOwner">

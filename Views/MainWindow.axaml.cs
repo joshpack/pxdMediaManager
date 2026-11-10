@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using ActivityKind = PaxMediaManager.Services.ActivityKind;
+using ActivityKind = pxdMediaManager.Services.ActivityKind;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -9,9 +9,9 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Path = Avalonia.Controls.Shapes.Path;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 public sealed class ActivityItem
 {
@@ -229,17 +229,17 @@ public partial class MainWindow : Window
         _sizeSaveTimer.Start();
     }
 
-    // ---- PAX Toolkit link ------------------------------------------------------------------------------------------
+    // ---- pxd Toolkit link ------------------------------------------------------------------------------------------
 
     private bool _settingTraySwitch;
 
     /// <summary>The user flipped Settings → "Show the tray icon".</summary>
     public event Action<bool>? TrayIconSwitched;
 
-    /// <summary>Settings → "Quit PAX Media Manager" (the way out when the tray icon is hidden).</summary>
+    /// <summary>Settings → "Quit pxd Media Manager" (the way out when the tray icon is hidden).</summary>
     public event Action? QuitRequested;
 
-    /// <summary>Shows the current tray icon state (e.g. after PAX Toolkit changed it) without reporting it back.</summary>
+    /// <summary>Shows the current tray icon state (e.g. after pxd Toolkit changed it) without reporting it back.</summary>
     public void SetTrayIconSwitch(bool visible)
     {
         _settingTraySwitch = true;

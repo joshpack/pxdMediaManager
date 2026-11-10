@@ -1,8 +1,8 @@
-# PAX Media Manager
+# pxd Media Manager
 
 **Your downloads, your media library and a video and picture player, in one desktop app.**
 
-PAX Media Manager sits in the tray and keeps things tidy: it sends new `.torrent` files to the folder or NAS share your torrent client watches, moves finished downloads into the right category folder, and turns those folders into a poster library with ratings, details, episode tracking and recommendations. When you want to watch something, it plays videos and pictures in its own viewer.
+pxd Media Manager sits in the tray and keeps things tidy: it sends new `.torrent` files to the folder or NAS share your torrent client watches, moves finished downloads into the right category folder, and turns those folders into a poster library with ratings, details, episode tracking and recommendations. When you want to watch something, it plays videos and pictures in its own viewer.
 
 ![The library: a poster grid with ratings, watched ticks and progress bars](docs/screenshots/library.png)
 
@@ -47,7 +47,7 @@ PAX Media Manager sits in the tray and keeps things tidy: it sends new `.torrent
 - Opens from the library, the details window or the tray ("Open media…"), one window per item.
 
 ### Everywhere
-- **Works with [PAX Toolkit](https://github.com/joshpack/PaxToolkit)**, which can open the app and turn its tray icon on or off (the same switch is in **Settings → Tray icon**). With the icon hidden the app keeps running; start it again to bring its window back. Every window has the PAX title bar and opens where you last left it.
+- **Works with [pxd Toolkit](https://github.com/joshpack/pxdToolkit)**, which can open the app and turn its tray icon on or off (the same switch is in **Settings → Tray icon**). With the icon hidden the app keeps running; start it again to bring its window back. Every window has the pxd title bar and opens where you last left it.
 
 ## Screenshots
 
@@ -73,32 +73,32 @@ The app is written once for all three systems ([Avalonia](https://avaloniaui.net
 
 ## Install
 
-Downloads are on the [latest release](https://github.com/joshpack/PaxMediaManager/releases/latest). Each file has a matching `.sha256` checksum.
+Downloads are on the [latest release](https://github.com/joshpack/pxdMediaManager/releases/latest). Each file has a matching `.sha256` checksum.
 
 | File | What it is |
 | --- | --- |
-| `PaxMediaManager-1.1.0-win-x64-setup.exe` | Windows installer (recommended) |
-| `PaxMediaManager-1.1.0-win-x64-portable.zip` | Windows, no install: unzip and run |
-| `PaxMediaManager-1.1.0-linux-x64.tar.gz` | Linux x64 (untested build) |
+| `pxdMediaManager-1.2.0-win-x64-setup.exe` | Windows installer (recommended) |
+| `pxdMediaManager-1.2.0-win-x64-portable.zip` | Windows, no install: unzip and run |
+| `pxdMediaManager-1.2.0-linux-x64.tar.gz` | Linux x64 (untested build) |
 
 ### Windows (setup)
 
-1. Download `PaxMediaManager-1.1.0-win-x64-setup.exe` and run it.
-2. It installs for your user only, so it doesn't ask for administrator rights. It puts the app in `%LOCALAPPDATA%\Programs\PAX Media Manager`, adds a Start menu shortcut (and a desktop one if you tick it) and an entry in **Settings → Apps → Installed apps**.
+1. Download `pxdMediaManager-1.2.0-win-x64-setup.exe` and run it.
+2. It installs for your user only, so it doesn't ask for administrator rights. It puts the app in `%LOCALAPPDATA%\Programs\pxd Media Manager`, adds a Start menu shortcut (and a desktop one if you tick it) and an entry in **Settings → Apps → Installed apps**.
 3. The app starts in the tray. The first time, its window opens so you can pick your folders.
 
 The setup isn't code-signed, so SmartScreen may warn about it: choose **More info → Run anyway**. You can check the download against its `.sha256` file first:
 
 ```powershell
-(Get-FileHash .\PaxMediaManager-1.1.0-win-x64-setup.exe -Algorithm SHA256).Hash
+(Get-FileHash .\pxdMediaManager-1.2.0-win-x64-setup.exe -Algorithm SHA256).Hash
 ```
 
 **Silent install** (Start menu shortcut, no desktop shortcut):
 
 ```powershell
-Start-Process .\PaxMediaManager-1.1.0-win-x64-setup.exe -ArgumentList '--quiet' -Wait
+Start-Process .\pxdMediaManager-1.2.0-win-x64-setup.exe -ArgumentList '--quiet' -Wait
 # into another folder:
-Start-Process .\PaxMediaManager-1.1.0-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\PAX Media Manager' -Wait
+Start-Process .\pxdMediaManager-1.2.0-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\pxd Media Manager' -Wait
 ```
 
 | Setup option | What it does |
@@ -109,11 +109,11 @@ Start-Process .\PaxMediaManager-1.1.0-win-x64-setup.exe -ArgumentList '--quiet',
 
 **Updating:** run the newer setup. It closes the running copy, replaces the files and keeps your settings.
 
-**Uninstall:** **Settings → Apps → Installed apps → PAX Media Manager → Uninstall**, or run `uninstall.cmd` in the install folder. That removes the app, its shortcuts, the Apps entry and start-at-login. Your settings and caches in `%APPDATA%\PaxMediaManager` are kept in case you reinstall; delete that folder to remove them too.
+**Uninstall:** **Settings → Apps → Installed apps → pxd Media Manager → Uninstall**, or run `uninstall.cmd` in the install folder. That removes the app, its shortcuts, the Apps entry and start-at-login. Your settings and caches in `%APPDATA%\pxdMediaManager` are kept in case you reinstall; delete that folder to remove them too.
 
 ### Windows (portable)
 
-Unzip `PaxMediaManager-1.1.0-win-x64-portable.zip` anywhere and run `PaxMediaManager\PaxMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\PaxMediaManager` for the settings).
+Unzip `pxdMediaManager-1.2.0-win-x64-portable.zip` anywhere and run `pxdMediaManager\pxdMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\pxdMediaManager` for the settings).
 
 ### Linux (x64)
 
@@ -129,13 +129,13 @@ Then unpack and run:
 
 ```bash
 mkdir -p ~/.local/opt
-tar -xzf PaxMediaManager-1.1.0-linux-x64.tar.gz -C ~/.local/opt
-~/.local/opt/PaxMediaManager/PaxMediaManager --show
+tar -xzf pxdMediaManager-1.2.0-linux-x64.tar.gz -C ~/.local/opt
+~/.local/opt/pxdMediaManager/pxdMediaManager --show
 ```
 
 It's self-contained, so no .NET install is needed. **Start at login** in Settings writes `~/.config/autostart/torrent-monitor.desktop`. On GNOME the tray icon needs the AppIndicator extension; without a tray, start it with `--show` so the window opens. Category and target folders can be `smb://` addresses; they're mounted through KIO FUSE (KDE) or GVfs (GNOME and others).
 
-To uninstall, turn off **Start at login**, then delete `~/.local/opt/PaxMediaManager` and, for the settings, `~/.config/PaxMediaManager`.
+To uninstall, turn off **Start at login**, then delete `~/.local/opt/pxdMediaManager` and, for the settings, `~/.config/pxdMediaManager`.
 
 This Linux build hasn't been tested yet. If something doesn't work, please open an issue.
 
@@ -186,27 +186,31 @@ In the carousel, `←` / `→` move through titles, `Home` / `End` jump to the f
 
 ### Command line
 
-`PaxMediaManager --show` opens the window at start-up instead of starting in the tray. Starting the app while it's already running opens the running copy's window.
+`pxdMediaManager --show` opens the window at start-up instead of starting in the tray. Starting the app while it's already running opens the running copy's window.
+
+`pxdMediaManager --self-test [FOLDER]` runs checks without opening a window or touching your settings (settings-folder and start-at-login moves from the app's earlier names, the pxd Toolkit link) and writes `report.txt` to FOLDER (default: a temp folder). The exit code is 0 when every check passed.
 
 ## Where your data lives
 
 | | Windows | Linux / macOS |
 | --- | --- | --- |
-| Settings, caches, watch history | `%APPDATA%\PaxMediaManager` | `~/.config/PaxMediaManager` (or under `$XDG_CONFIG_HOME`) |
-| The installed app | `%LOCALAPPDATA%\Programs\PAX Media Manager` | wherever you unpacked it |
-| Start at login | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `PaxMediaManager` | `~/.config/autostart/torrent-monitor.desktop` (Linux), `~/Library/LaunchAgents/com.torrentmonitor.app.plist` (macOS) |
+| Settings, caches, watch history | `%APPDATA%\pxdMediaManager` | `~/.config/pxdMediaManager` (or under `$XDG_CONFIG_HOME`) |
+| The installed app | `%LOCALAPPDATA%\Programs\pxd Media Manager` | wherever you unpacked it |
+| Start at login | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `pxdMediaManager` | `~/.config/autostart/torrent-monitor.desktop` (Linux), `~/Library/LaunchAgents/com.torrentmonitor.app.plist` (macOS) |
 
 The settings folder holds `settings.json`, `watch-history.json`, `stats.json`, `viewer.json`, `windows.json` (where each window was left) and caches (`posters/`, `matches/`, `details/`, `ratings/`, …). Deleting the caches is safe; they're rebuilt as needed. If you use a shared settings folder, it holds `torrentmonitor-settings.json` and one `stats-<machine>.json` per PC. (The "torrentmonitor" names come from the app's old name and are kept so older installs keep working.)
 
-Set the `PAXMM_DATA_DIR` environment variable to keep all of this in another folder instead, e.g. for testing.
+When you update from a version that had an earlier name, the app moves its settings folder and its start-at-login entry to the new name the first time it starts, and the setup program replaces the earlier install's shortcuts, Apps entry and folder. Nothing needs doing by hand.
+
+Set the `PXDMM_DATA_DIR` environment variable to keep all of this in another folder instead, e.g. for testing.
 
 ## Build from source
 
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download).
 
 ```bash
-git clone https://github.com/joshpack/PaxMediaManager.git
-cd PaxMediaManager
+git clone https://github.com/joshpack/pxdMediaManager.git
+cd pxdMediaManager
 dotnet run -- --show
 ```
 
@@ -222,16 +226,16 @@ dotnet publish -c Release -r linux-x64 --self-contained true -p:DebugType=none -
 
 Publish it as a folder, not a single file: the video player's and renderer's native libraries have to be real files.
 
-**Installer:** `installer\build-setup.ps1 [-Version 1.0.0]` publishes the app, packs it into the setup program (`installer\Setup`) and writes `%LOCALAPPDATA%\PaxMediaManager\installer\pax-media-manager-setup.exe` plus a `.sha256`. The version defaults to `<Version>` in `installer\Setup\PaxMediaManager.Setup.csproj`. Release assets are renamed to `PaxMediaManager-<version>-win-x64-setup.exe`.
+**Installer:** `installer\build-setup.ps1 [-Version 1.0.0]` publishes the app, packs it into the setup program (`installer\Setup`) and writes `%LOCALAPPDATA%\pxdMediaManager\installer\pxd-media-manager-setup.exe` plus a `.sha256`. The version defaults to `<Version>` in `installer\Setup\pxdMediaManager.Setup.csproj`. Release assets are renamed to `pxdMediaManager-<version>-win-x64-setup.exe`.
 
-**Testing against stand-in servers:** every online source can be pointed elsewhere with an environment variable, so tests never need real keys: `TORRENTMONITOR_TMDB_API`, `TORRENTMONITOR_TMDB_IMAGES`, `PAXMM_OMDB_API`, `PAXMM_MDBLIST_API`, `PAXMM_TVMAZE_API`, `PAXMM_STEAM_API`, `PAXMM_STEAMSPY_API`, `PAXMM_AUDIBLE_API`, `PAXMM_ANILIST_API`, `PAXMM_OPENSUBTITLES_API`. Combine them with `PAXMM_DATA_DIR` to keep test data away from your real settings.
+**Testing against stand-in servers:** every online source can be pointed elsewhere with an environment variable, so tests never need real keys: `TORRENTMONITOR_TMDB_API`, `TORRENTMONITOR_TMDB_IMAGES`, `PXDMM_OMDB_API`, `PXDMM_MDBLIST_API`, `PXDMM_TVMAZE_API`, `PXDMM_STEAM_API`, `PXDMM_STEAMSPY_API`, `PXDMM_AUDIBLE_API`, `PXDMM_ANILIST_API`, `PXDMM_OPENSUBTITLES_API`. Combine them with `PXDMM_DATA_DIR` to keep test data away from your real settings.
 
 ## Code layout
 
 | Path | What's there |
 | --- | --- |
 | `Program.cs`, `App.axaml(.cs)` | Start-up, single-instance guard, tray icon and menu |
-| `PaxStandard.cs`, `AppChrome.cs`, `Services/ToolkitLink.cs` | The PAX App Standard: title bar, remembered window placement, PAX Toolkit link (tray icon on/off), opening the running copy |
+| `pxdStandard.cs`, `AppChrome.cs`, `Services/ToolkitLink.cs` | The pxd App Standard: title bar, remembered window placement, pxd Toolkit link (tray icon on/off), opening the running copy |
 | `Services/` | Torrent watcher, auto-mover, stats, settings (local and shared), library scanner, metadata clients (TMDB, OMDb, MDBList, TVmaze, Steam, Audible, AniList, OpenSubtitles), Discover, watch history, media specs, data folder (`AppPaths`) |
 | `Views/` | Main window (Dashboard, Library, Discover, Activity, Settings), details window, match / choice / batch dialogs, progress overlay, arrival notice |
 | `Viewer/` | The video and picture viewer window, the LibVLC player and the zoomable image stage |

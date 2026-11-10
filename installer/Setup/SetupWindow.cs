@@ -6,9 +6,9 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using ShapePath = Avalonia.Controls.Shapes.Path;
 
-namespace PaxMediaManager.Setup;
+namespace pxdMediaManager.Setup;
 
-/// <summary>The setup window, in PAX Media Manager's own look: where to install, a desktop shortcut or not, Install, then Open.</summary>
+/// <summary>The setup window, in pxd Media Manager's own look: where to install, a desktop shortcut or not, Install, then Open.</summary>
 public sealed class SetupWindow : Window
 {
     private static readonly IBrush Bg = Brush.Parse("#0B0F14");
@@ -27,7 +27,7 @@ public sealed class SetupWindow : Window
 
     public SetupWindow()
     {
-        Title = "PAX Media Manager setup";
+        Title = "pxd Media Manager setup";
         Width = 560;
         Height = 430;
         CanResize = false;
@@ -70,7 +70,7 @@ public sealed class SetupWindow : Window
                                 VerticalAlignment = VerticalAlignment.Center, Spacing = 2,
                                 Children =
                                 {
-                                    new TextBlock { Text = "PAX Media Manager", FontSize = 24, FontWeight = FontWeight.Bold, Foreground = Text },
+                                    new TextBlock { Text = "pxd Media Manager", FontSize = 24, FontWeight = FontWeight.Bold, Foreground = Text },
                                     new TextBlock { Text = $"Version {Installer.Version}  ·  torrents, your library, a video and picture viewer", FontSize = 12.5, Foreground = Dim },
                                 },
                             },
@@ -92,11 +92,11 @@ public sealed class SetupWindow : Window
             },
         };
 
-        // The PAX title bar, like the app's windows (PaxStandard.cs). Setup runs once, so its placement isn't remembered.
+        // The pxd title bar, like the app's windows (pxdStandard.cs). Setup runs once, so its placement isn't remembered.
         var body = (Control)Content;
         Content = null;
         Height += 39;
-        Content = PaxStandard.PaxChrome.Wrap(this, body, "PAX Media Manager setup", Brand.Bitmap(36), resizable: false);
+        Content = pxdStandard.pxdChrome.Wrap(this, body, "pxd Media Manager setup", Brand.Bitmap(36), resizable: false);
     }
 
     private async Task GoAsync()
@@ -114,9 +114,9 @@ public sealed class SetupWindow : Window
         {
             _installed = await Installer.InstallAsync(_folder.Text ?? Installer.DefaultFolder, _desktop.IsChecked == true,
                 (text, done) => Dispatcher.UIThread.Post(() => { _status.Text = text; _bar.Value = done; }));
-            _status.Text = "Installed. PAX Media Manager is in your Start menu.";
+            _status.Text = "Installed. pxd Media Manager is in your Start menu.";
             _status.Foreground = Accent;
-            _go.Content = "Open PAX Media Manager";
+            _go.Content = "Open pxd Media Manager";
         }
         catch (Exception ex)
         {
@@ -129,7 +129,7 @@ public sealed class SetupWindow : Window
     }
 }
 
-/// <summary>PAX Media Manager's spade on its accent tile (the same drawing as the app's SpadeIcon).</summary>
+/// <summary>pxd Media Manager's spade on its accent tile (the same drawing as the app's SpadeIcon).</summary>
 public static class Brand
 {
     private const string Spade =

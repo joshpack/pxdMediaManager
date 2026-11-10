@@ -3,9 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 /// <summary>Small building blocks shared by the code-built tool windows (stats, duplicates, cast).</summary>
 internal static class Ui
@@ -60,7 +60,7 @@ internal static class Ui
         return row;
     }
 
-    /// <summary>A code-built window with the PAX title bar; its placement is remembered under <paramref name="placementKey"/>.</summary>
+    /// <summary>A code-built window with the pxd title bar; its placement is remembered under <paramref name="placementKey"/>.</summary>
     public static Window ToolWindow(string title, double width, double height, Control content, string placementKey)
     {
         var window = new Window

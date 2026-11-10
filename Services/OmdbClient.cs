@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Ratings from other sites, as OMDb reports them. Empty strings mean that site has no score for the title.</summary>
 public sealed record OmdbRatings(
@@ -24,7 +24,7 @@ public sealed class OmdbClient
 
     private readonly string _key;
     // Overridable so the client can be tested against a local stand-in server.
-    private readonly string _api = Environment.GetEnvironmentVariable("PAXMM_OMDB_API") ?? DefaultApi;
+    private readonly string _api = Environment.GetEnvironmentVariable("PXDMM_OMDB_API") ?? DefaultApi;
 
     public OmdbClient(string key) => _key = key.Trim();
 
@@ -143,7 +143,7 @@ public sealed class OmdbClient
     private static HttpClient CreateHttp()
     {
         var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("PaxMediaManager/1.0");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("pxdMediaManager/1.0");
         return http;
     }
 }

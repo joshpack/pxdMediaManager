@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Threading;
 
-namespace PaxMediaManager.Setup;
+namespace pxdMediaManager.Setup;
 
 /// <summary>
 /// Off-screen drawing, so nothing pops up on the desktop: "--screenshot setup.png" draws the setup window into a

@@ -10,10 +10,10 @@ using Avalonia.Media.Transformation;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Threading;
-using PaxMediaManager.Services;
-using PaxMediaManager.Viewer;
+using pxdMediaManager.Services;
+using pxdMediaManager.Viewer;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 /// <summary>
 /// Browsable library of what's in the category folders: a tile per top-level movie, show, game or album, either as a

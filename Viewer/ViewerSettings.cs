@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PaxMediaManager.Viewer;
+namespace pxdMediaManager.Viewer;
 
 /// <summary>Viewer preferences, remembered between runs in the per-user app-data folder.</summary>
 public sealed class ViewerSettings
@@ -24,7 +24,7 @@ public sealed class ViewerSettings
     public static ViewerSettings Shared { get; } = Load();
 
     private static string FilePath =>
-        System.IO.Path.Combine(PaxMediaManager.Services.AppPaths.DataDir, "viewer.json");
+        System.IO.Path.Combine(pxdMediaManager.Services.AppPaths.DataDir, "viewer.json");
 
     public static ViewerSettings Load()
     {

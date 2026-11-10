@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Persisted user settings plus the "ignore forever" list, stored as JSON in the per-user app-data folder.</summary>
 public sealed partial class AppSettings

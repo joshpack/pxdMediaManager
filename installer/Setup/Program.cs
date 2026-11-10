@@ -3,10 +3,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Themes.Fluent;
 
-namespace PaxMediaManager.Setup;
+namespace pxdMediaManager.Setup;
 
 /// <summary>
-/// pax-media-manager-setup.exe
+/// pxd-media-manager-setup.exe
 ///   (no arguments)            the setup window
 ///   --quiet [--dir FOLDER]    installs without a window (Start menu shortcut, no desktop shortcut)
 ///   --unpack FOLDER           just puts the app's files in FOLDER: no shortcuts, no Apps &amp; features entry (portable)
@@ -28,7 +28,7 @@ public static class Program
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("PAX Media Manager setup: " + ex.Message);
+                Console.Error.WriteLine("pxd Media Manager setup: " + ex.Message);
                 return 1;
             }
         }
@@ -41,7 +41,7 @@ public static class Program
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("PAX Media Manager setup: " + ex.Message);
+                Console.Error.WriteLine("pxd Media Manager setup: " + ex.Message);
                 return 1;
             }
         }
@@ -60,7 +60,7 @@ public sealed class SetupApp : Application
     {
         RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
         Styles.Add(new FluentTheme());
-        Styles.Add(PaxStandard.PaxChrome.Styles());
+        Styles.Add(pxdStandard.pxdChrome.Styles());
     }
 
     public override void OnFrameworkInitializationCompleted()

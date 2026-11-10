@@ -1,7 +1,7 @@
 using LibVLCSharp.Shared;
-using PaxMediaManager.Viewer;
+using pxdMediaManager.Viewer;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>Technical details of the main video file of a library item: length, codecs, resolution, audio and subtitle tracks.</summary>
 public sealed class MediaSpecs

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>
 /// Watches a folder for new .torrent files, asks the user what to do, and transfers them to the target folder.

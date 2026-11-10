@@ -9,7 +9,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 
-namespace PaxMediaManager.Viewer;
+namespace pxdMediaManager.Viewer;
 
 /// <summary>One window for both jobs: a picture viewer (zoom, pan, rotate, slideshow) and a video player.</summary>
 public partial class ViewerWindow : Window
@@ -161,7 +161,7 @@ public partial class ViewerWindow : Window
         {
             this.FindControl<TextBlock>("FileText")!.Text = "";
             this.FindControl<TextBlock>("InfoText")!.Text = "";
-            Title = "PAX Media Manager";
+            Title = "pxd Media Manager";
         }
     }
 
@@ -189,7 +189,7 @@ public partial class ViewerWindow : Window
             return;
         var path = _items[_index];
         var name = Path.GetFileName(path);
-        Title = $"{name} — PAX Media Manager";
+        Title = $"{name} — pxd Media Manager";
         this.FindControl<TextBlock>("FileText")!.Text = name;
 
         var info = $"{_index + 1} / {_items.Count}";

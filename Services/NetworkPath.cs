@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>
 /// Lets a folder setting point at a network share by URL (smb://host/share/folder) on Linux. A share has no fixed

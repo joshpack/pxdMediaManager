@@ -1,7 +1,7 @@
 using Avalonia.Controls;
-using PaxMediaManager.Services;
+using pxdMediaManager.Services;
 
-namespace PaxMediaManager.Views;
+namespace pxdMediaManager.Views;
 
 public partial class ChoiceDialog : Window
 {

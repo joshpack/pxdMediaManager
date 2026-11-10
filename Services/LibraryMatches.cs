@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace PaxMediaManager.Services;
+namespace pxdMediaManager.Services;
 
 /// <summary>
 /// Matches the user picked by hand ("fix match"). They override whatever the automatic search finds and survive rescans.

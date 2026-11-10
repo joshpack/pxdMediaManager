@@ -1,17 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Media;
-using PaxStandard;
+using pxdStandard;
 
-namespace PaxMediaManager;
+namespace pxdMediaManager;
 
 /// <summary>
-/// The PAX title bar and remembered placement for every window the app shows (see PaxStandard.cs). The toasts (move
+/// The pxd title bar and remembered placement for every window the app shows (see pxdStandard.cs). The toasts (move
 /// overlay, arrival notice) have no title bar at all and place themselves, so they don't use this.
 /// </summary>
 public static class AppChrome
 {
-    public const string AppId = "PaxMediaManager";
-    public const string AppName = "PAX Media Manager";
+    public const string AppId = "pxdMediaManager";
+    public const string AppName = "pxd Media Manager";
 
     private static IImage? _icon;
 
@@ -19,16 +19,16 @@ public static class AppChrome
     public static IImage Icon => _icon ??= BrandIcon.Render(36);
 
     /// <summary>
-    /// Replaces the system title bar with the PAX one and, with a <paramref name="placementKey"/>, restores and keeps
+    /// Replaces the system title bar with the pxd one and, with a <paramref name="placementKey"/>, restores and keeps
     /// saving the window's size, position and maximized state (in windows.json in the data folder).
     /// </summary>
     public static void Apply(Window w, string? placementKey, bool resizable = true)
     {
         var content = w.Content as Control ?? new Panel();
         w.Content = null;
-        w.Content = PaxChrome.Wrap(w, content, AppName, Icon, resizable);
+        w.Content = pxdChrome.Wrap(w, content, AppName, Icon, resizable);
         if (placementKey is not null)
-            PaxChrome.RememberPlacement(w, placementKey);
+            pxdChrome.RememberPlacement(w, placementKey);
     }
 
     /// <summary>The title bar of a window given one by <see cref="Apply"/> (null if it has none).</summary>

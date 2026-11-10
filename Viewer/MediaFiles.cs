@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace PaxMediaManager.Viewer;
+namespace pxdMediaManager.Viewer;
 
 public enum MediaMode
 {

@@ -7,7 +7,7 @@ internal static class Program
     private static FileStream? _instanceLock;
 
     /// <summary>Where updates come from: the Windows portable zip (the Toolkit installs it; the setup holds the same files).</summary>
-    public const string UpdateRepo = "joshpack/pxdMediaManager";
+    public const string UpdateRepo = "pxdtek/pxdMediaManager";
     public const string UpdateAsset = @"^pxdMediaManager-.*-win-x64-portable\.zip$";
 
     [STAThread]

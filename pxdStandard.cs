@@ -5,7 +5,7 @@
 //   watches it and shows/hides the icon live. PXD_SHARED_DIR overrides the folder (tests).
 // - pxdMigrate: one-time moves from the apps' former names (settings folders, the shared toolkit.json, Run entries).
 // Call pxdChrome.Configure(appId, dataDir) once at start-up, and add pxdChrome.Styles() to Application.Styles.
-// Canonical copy: lives in joshpack/pxdToolkit docs/standard; apps copy it unchanged.
+// Canonical copy: lives in github.com/pxdtek/pxdToolkit docs/standard; apps copy it unchanged.
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -425,7 +425,7 @@ public static class pxdUpdate
     private const string Old = ".pxdold";
     private const string WaitEnv = "PXD_UPDATED_FROM";
 
-    /// <summary>The release folder this copy came from, e.g. joshpack/pxdWatermark and ^pxdWatermark-.*-win-x64\.zip$.</summary>
+    /// <summary>The release folder this copy came from, e.g. pxdtek/pxdWatermark and ^pxdWatermark-.*-win-x64\.zip$.</summary>
     public static bool BeforeStart(string repo, string assetPattern, string[] args, Version? current = null)
     {
         try
@@ -471,12 +471,62 @@ public static class pxdUpdate
         return m.Success ? new Version(int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : 0) : null;
     }
 
-    /// <summary>The newer release's download (and checksum) URLs, or null when this copy is current or GitHub can't be asked.</summary>
+    /// <summary>
+    /// Where release info is asked for, in order: pxdtek.com (it fetches from GitHub on its side, so clients only ever talk
+    /// to pxdtek.com and GitHub's limit is paid once there), then GitHub itself for networks that block pxdtek.com.
+    /// PXD_UPDATE_API replaces both (tests).
+    /// </summary>
+    public static string[] ApiBases() =>
+        Environment.GetEnvironmentVariable("PXD_UPDATE_API") is { Length: > 0 } a
+            ? [a.TrimEnd('/')]
+            : ["https://pxdtek.com/gh", "https://api.github.com"];
+
+    /// <summary>pxdtek.com's copy of a GitHub release download → the same file on GitHub (the fallback).</summary>
+    public static string? GitHubCopy(string url)
+    {
+        var m = Regex.Match(url, @"^https://pxdtek\.com/dl/([^/]+)/([^/]+)/([^/]+)$");
+        return m.Success ? $"https://github.com/pxdtek/{m.Groups[1].Value}/releases/download/{m.Groups[2].Value}/{m.Groups[3].Value}" : null;
+    }
+
+    private static async Task<string> GetWithFallbackAsync(HttpClient http, string url)
+    {
+        try
+        {
+            return await http.GetStringAsync(url);
+        }
+        catch when (GitHubCopy(url) is not null)
+        {
+            return await http.GetStringAsync(GitHubCopy(url));
+        }
+    }
+
+    /// <summary>The newer release's download (and checksum) URLs, or null when this copy is current or nothing could be asked.</summary>
     public static async Task<(string Zip, string? Sum)?> FindUpdateAsync(string repo, string assetPattern, Version current)
     {
-        var api = Environment.GetEnvironmentVariable("PXD_UPDATE_API") is { Length: > 0 } a ? a.TrimEnd('/') : "https://api.github.com";
         using var http = Client(TimeSpan.FromSeconds(4));
-        using var doc = JsonDocument.Parse(await http.GetStringAsync($"{api}/repos/{repo}/releases/latest"));
+        JsonDocument? doc = null;
+        foreach (var api in ApiBases())
+        {
+            try
+            {
+                var parsed = JsonDocument.Parse(await http.GetStringAsync($"{api}/repos/{repo}/releases/latest"));
+                if (parsed.RootElement.ValueKind == JsonValueKind.Object && parsed.RootElement.TryGetProperty("tag_name", out _))
+                {
+                    doc = parsed;
+                    break;
+                }
+
+                parsed.Dispose();
+            }
+            catch
+            {
+                /* blocked, offline or not JSON (a filter's block page): try the next */
+            }
+        }
+
+        if (doc is null)
+            return null;
+        using var release = doc;
         var root = doc.RootElement;
         if (ParseVersion(root.GetProperty("tag_name").GetString()) is not { } latest || latest <= current)
             return null;
@@ -511,12 +561,23 @@ public static class pxdUpdate
             var zip = Path.Combine(stage, "update.zip");
             using (var http = Client(TimeSpan.FromMinutes(5)))
             {
-                await using (var src = await http.GetStreamAsync(zipUrl))
-                await using (var dst = File.Create(zip))
+                try
+                {
+                    await using var src = await http.GetStreamAsync(zipUrl);
+                    await using var dst = File.Create(zip);
                     await src.CopyToAsync(dst);
+                }
+                catch when (GitHubCopy(zipUrl) is { } alt)
+                {
+                    // pxdtek.com blocked or down: the same file straight from GitHub.
+                    await using var src = await http.GetStreamAsync(alt);
+                    await using var dst = File.Create(zip);
+                    await src.CopyToAsync(dst);
+                }
+
                 if (sumUrl is not null)
                 {
-                    var expected = Regex.Match(await http.GetStringAsync(sumUrl), "[0-9a-fA-F]{64}").Value;
+                    var expected = Regex.Match(await GetWithFallbackAsync(http, sumUrl), "[0-9a-fA-F]{64}").Value;
                     await using var fs = File.OpenRead(zip);
                     var actual = Convert.ToHexString(await System.Security.Cryptography.SHA256.HashDataAsync(fs));
                     if (expected.Length == 64 && !expected.Equals(actual, StringComparison.OrdinalIgnoreCase))

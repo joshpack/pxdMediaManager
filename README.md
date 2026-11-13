@@ -47,7 +47,7 @@ pxd Media Manager sits in the tray and keeps things tidy: it sends new `.torrent
 - Opens from the library, the details window or the tray ("Open media…"), one window per item.
 
 ### Everywhere
-- **Works with [pxd Toolkit](https://github.com/joshpack/pxdToolkit)**, which can open the app and turn its tray icon on or off (the same switch is in **Settings → Tray icon**). With the icon hidden the app keeps running; start it again to bring its window back. Every window has the pxd title bar and opens where you last left it.
+- **Works with [pxd Toolkit](https://github.com/pxdtek/pxdToolkit)**, which can open the app and turn its tray icon on or off (the same switch is in **Settings → Tray icon**). With the icon hidden the app keeps running; start it again to bring its window back. Every window has the pxd title bar and opens where you last left it.
 
 ## Screenshots
 
@@ -73,32 +73,32 @@ The app is written once for all three systems ([Avalonia](https://avaloniaui.net
 
 ## Install
 
-Downloads are on the [latest release](https://github.com/joshpack/pxdMediaManager/releases/latest). Each file has a matching `.sha256` checksum.
+Downloads are on the [latest release](https://github.com/pxdtek/pxdMediaManager/releases/latest). Each file has a matching `.sha256` checksum.
 
 | File | What it is |
 | --- | --- |
-| `pxdMediaManager-1.2.1-win-x64-setup.exe` | Windows installer (recommended) |
-| `pxdMediaManager-1.2.1-win-x64-portable.zip` | Windows, no install: unzip and run |
-| `pxdMediaManager-1.2.1-linux-x64.tar.gz` | Linux x64 (untested build) |
+| `pxdMediaManager-1.2.2-win-x64-setup.exe` | Windows installer (recommended) |
+| `pxdMediaManager-1.2.2-win-x64-portable.zip` | Windows, no install: unzip and run |
+| `pxdMediaManager-1.2.2-linux-x64.tar.gz` | Linux x64 (untested build) |
 
 ### Windows (setup)
 
-1. Download `pxdMediaManager-1.2.1-win-x64-setup.exe` and run it.
+1. Download `pxdMediaManager-1.2.2-win-x64-setup.exe` and run it.
 2. It installs for your user only, so it doesn't ask for administrator rights. It puts the app in `%LOCALAPPDATA%\Programs\pxd Media Manager`, adds a Start menu shortcut (and a desktop one if you tick it) and an entry in **Settings → Apps → Installed apps**.
 3. The app starts in the tray. The first time, its window opens so you can pick your folders.
 
 The setup isn't code-signed, so SmartScreen may warn about it: choose **More info → Run anyway**. You can check the download against its `.sha256` file first:
 
 ```powershell
-(Get-FileHash .\pxdMediaManager-1.2.1-win-x64-setup.exe -Algorithm SHA256).Hash
+(Get-FileHash .\pxdMediaManager-1.2.2-win-x64-setup.exe -Algorithm SHA256).Hash
 ```
 
 **Silent install** (Start menu shortcut, no desktop shortcut):
 
 ```powershell
-Start-Process .\pxdMediaManager-1.2.1-win-x64-setup.exe -ArgumentList '--quiet' -Wait
+Start-Process .\pxdMediaManager-1.2.2-win-x64-setup.exe -ArgumentList '--quiet' -Wait
 # into another folder:
-Start-Process .\pxdMediaManager-1.2.1-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\pxd Media Manager' -Wait
+Start-Process .\pxdMediaManager-1.2.2-win-x64-setup.exe -ArgumentList '--quiet','--dir','D:\Apps\pxd Media Manager' -Wait
 ```
 
 | Setup option | What it does |
@@ -113,7 +113,7 @@ Start-Process .\pxdMediaManager-1.2.1-win-x64-setup.exe -ArgumentList '--quiet',
 
 ### Windows (portable)
 
-Unzip `pxdMediaManager-1.2.1-win-x64-portable.zip` anywhere and run `pxdMediaManager\pxdMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\pxdMediaManager` for the settings).
+Unzip `pxdMediaManager-1.2.2-win-x64-portable.zip` anywhere and run `pxdMediaManager\pxdMediaManager.exe`. Nothing is registered. To remove it, quit it from the tray and delete the folder (and `%APPDATA%\pxdMediaManager` for the settings).
 
 ### Linux (x64)
 
@@ -129,7 +129,7 @@ Then unpack and run:
 
 ```bash
 mkdir -p ~/.local/opt
-tar -xzf pxdMediaManager-1.2.1-linux-x64.tar.gz -C ~/.local/opt
+tar -xzf pxdMediaManager-1.2.2-linux-x64.tar.gz -C ~/.local/opt
 ~/.local/opt/pxdMediaManager/pxdMediaManager --show
 ```
 
@@ -188,7 +188,7 @@ In the carousel, `←` / `→` move through titles, `Home` / `End` jump to the f
 
 `pxdMediaManager --show` opens the window at start-up instead of starting in the tray. Starting the app while it's already running opens the running copy's window.
 
-**Updates:** on Windows the app checks for a newer release each time it starts (4 seconds at most, skipped when offline) and, if there is one, updates its own folder and starts again: the portable copy and the copy the setup program installed both update this way. Set `PXD_NO_UPDATE=1` to turn it off. The Linux build doesn't update itself.
+**Updates:** on Windows the app checks pxdtek.com for a newer release each time it starts (GitHub when pxdtek.com can't be reached; 4 seconds at most, skipped when offline) and, if there is one, updates its own folder and starts again: the portable copy and the copy the setup program installed both update this way. Set `PXD_NO_UPDATE=1` to turn it off. The Linux build doesn't update itself.
 
 `pxdMediaManager --self-test [FOLDER]` runs checks without opening a window or touching your settings (settings-folder and start-at-login moves from the app's earlier names, the pxd Toolkit link) and writes `report.txt` to FOLDER (default: a temp folder). The exit code is 0 when every check passed.
 
@@ -211,7 +211,7 @@ Set the `PXDMM_DATA_DIR` environment variable to keep all of this in another fol
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download).
 
 ```bash
-git clone https://github.com/joshpack/pxdMediaManager.git
+git clone https://github.com/pxdtek/pxdMediaManager.git
 cd pxdMediaManager
 dotnet run -- --show
 ```

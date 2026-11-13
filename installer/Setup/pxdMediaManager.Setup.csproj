@@ -12,7 +12,7 @@
     <AssemblyName>pxd-media-manager-setup</AssemblyName>
     <Product>pxd Media Manager</Product>
     <Company>pxd</Company>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon Condition="Exists('..\spade.ico')">..\spade.ico</ApplicationIcon>

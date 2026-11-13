@@ -139,10 +139,35 @@ public static class SelfTest
         // program (both temp folders): the same zip updates both, and the setup's own files are kept.
         Try("update: fake release", () => UpdateFromFakeRelease(Path.Combine(folder, "update"), Check));
 
+        // Where updates come from (nothing is fetched here): pxdtek.com first, GitHub when that fails.
+        Try("update: sources", () =>
+        {
+            var before = Environment.GetEnvironmentVariable("PXD_UPDATE_API");
+            Environment.SetEnvironmentVariable("PXD_UPDATE_API", null);
+            try
+            {
+                Check("update: release info from pxdtek.com first, then GitHub",
+                    pxdUpdate.ApiBases() is ["https://pxdtek.com/gh", "https://api.github.com"], string.Join(", ", pxdUpdate.ApiBases()));
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("PXD_UPDATE_API", before);
+            }
+
+            var repo = Program.UpdateRepo.Split('/')[1];
+            Check("update: a failed pxdtek.com download falls back to the GitHub copy",
+                pxdUpdate.GitHubCopy($"https://pxdtek.com/dl/{repo}/v9.9.9/{repo}-9.9.9-win-x64-portable.zip")
+                    == $"https://github.com/{Program.UpdateRepo}/releases/download/v9.9.9/{repo}-9.9.9-win-x64-portable.zip"
+                && pxdUpdate.GitHubCopy("https://example.com/x.zip") is null);
+        });
+
         lines.Add(failed == 0 ? "ALL PASSED" : $"{failed} FAILED");
         File.WriteAllText(report, string.Join(Environment.NewLine, lines) + Environment.NewLine, new UTF8Encoding(false));
         return failed == 0 ? 0 : 1;
     }
+
+    /// <summary>What a web filter answers instead of the real file.</summary>
+    private const string BlockPage = "<!DOCTYPE html><html><head><title>Blocked</title></head><body>This site is blocked by your network.</body></html>";
 
     private static void UpdateFromFakeRelease(string root, Action<string, bool, string> check)
     {
@@ -189,6 +214,8 @@ public static class SelfTest
                         $$"""{"tag_name":"v99.0.0","assets":[{"name":"{{AppChrome.AppId}}-99.0.0-win-x64-setup.exe","browser_download_url":"{{prefix}}setup"},{"name":"{{zipName}}","browser_download_url":"{{prefix}}zip"},{"name":"{{zipName}}.sha256","browser_download_url":"{{prefix}}sum"},{"name":"{{AppChrome.AppId}}-99.0.0-linux-x64.tar.gz","browser_download_url":"{{prefix}}tar"}]}"""),
                     "/zip" => File.ReadAllBytes(zip),
                     "/sum" => Encoding.ASCII.GetBytes(hash + "  " + zipName),
+                    // A web filter's block page: 200 OK, but HTML instead of the release info or the zip.
+                    "/html/repos/" + Program.UpdateRepo + "/releases/latest" or "/htmlzip" => Encoding.UTF8.GetBytes(BlockPage),
                     _ => [],
                 };
                 ctx.Response.StatusCode = body.Length == 0 ? 404 : 200;
@@ -215,6 +242,15 @@ public static class SelfTest
             }
 
             check("update: the setup's uninstall.cmd is kept", File.ReadAllText(Path.Combine(installed, "uninstall.cmd")) == "setup's uninstaller", "");
+
+            // Block pages: never taken as release info, never installed.
+            Environment.SetEnvironmentVariable("PXD_UPDATE_API", prefix + "html");
+            check("update: a block page is never taken as release info",
+                pxdUpdate.FindUpdateAsync(Program.UpdateRepo, Program.UpdateAsset, new Version(0, 0, 1)).GetAwaiter().GetResult() is null, "");
+            var blocked = Copy("blocked", setup: false);
+            var installedBlock = pxdUpdate.ApplyAsync(prefix + "htmlzip", null, blocked, Path.Combine(blocked, exe), [], start: false).GetAwaiter().GetResult();
+            check("update: a block page is never installed (files untouched)", !installedBlock && File.ReadAllText(Path.Combine(blocked, exe)) == "old exe"
+                && !Directory.EnumerateFiles(blocked, "*.pxdold", SearchOption.AllDirectories).Any(), "");
         }
         finally
         {

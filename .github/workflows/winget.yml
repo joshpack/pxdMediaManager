@@ -1,0 +1,22 @@
+# Sends each new GitHub release to winget (microsoft/winget-pkgs) as a pull request, so `winget upgrade` sees it.
+# Needs a secret WINGET_TOKEN (set once for the whole pxdtek organization): a classic GitHub token with the
+# public_repo scope, from an account that has a fork of microsoft/winget-pkgs. Without the secret the job does nothing.
+name: Publish to WinGet
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  winget:
+    runs-on: windows-latest
+    env:
+      WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+    steps:
+      - name: Open the winget-pkgs pull request
+        if: ${{ env.WINGET_TOKEN != '' }}
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: pxdtek.MediaManager
+          installers-regex: '-win-x64-setup\.exe$'
+          token: ${{ secrets.WINGET_TOKEN }}
